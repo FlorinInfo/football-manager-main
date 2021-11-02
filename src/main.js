@@ -24,6 +24,11 @@ Vue.use(Vuesax, {
 })
 
 import 'boxicons/css/boxicons.min.css'
+
+import VueCtkDateTimePicker from 'vue-ctk-date-time-picker';
+import 'vue-ctk-date-time-picker/dist/vue-ctk-date-time-picker.css';
+ 
+Vue.component('VueCtkDateTimePicker', VueCtkDateTimePicker);
  
 new Vue({
   router,

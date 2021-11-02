@@ -78,23 +78,6 @@ export default new Vuex.Store({
         localStorage.setItem("logged", response.status)
         if(response.status != true) window.location = "/"
       })
-    },
-    verifySeason({commit}, season_id) {
-      const data = {
-        season_id:season_id
-      }
-      console.log(data)
-      axios.post('/check-season-id', data).then((response) => {
-        let players = [];
-        if(response.data.players && response.data.players.length > 0) players = response.data.players.reverse();
-        commit("CHECK_SEASON",{
-          id:season_id,
-          players,
-          season_info:response.data.season_info,
-          status:response.data.status
-        });
-        console.log(response)
-      })
     }
   },
   modules: {

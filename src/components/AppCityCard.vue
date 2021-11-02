@@ -1,5 +1,5 @@
 <template>
-    <div class="app-city-card" @click="$emit('goLink',stadium.id)">
+    <div class="app-city-card" @click="$emit('goLink',stadium._id)">
         <span class="app-city-card__location">
             {{stadium.location}}
         </span>
