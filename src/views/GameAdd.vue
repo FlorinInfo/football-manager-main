@@ -104,7 +104,7 @@
             @click="addGame"
             block
         >
-            <i class='bx bx-play' ></i>Start Campionat
+            <i class='bx bx-play' ></i>Programeaza campionat
         </vs-button>
         </div>
         {{$store.state.add_game}}
@@ -133,8 +133,17 @@ export default {
     },
     methods:{
         addGame(){
-            console.log(this.game)
-            this.axios.post("/add-game", this.game).then((response)=>{
+            const data = {
+                token:this.$store.state.token,
+                user_id:this.$store.state.user_id,
+                ...this.game
+            }
+            this.axios.post("/add-game", data).then((response)=>{
+                response = response.data;
+                this.$store.commit("SET_AUTH", response.logged);
+                if(response.status==true) {
+                    alert(1)
+                }
                 console.log(response)
             }).catch(error=>{
                 console.log(error);

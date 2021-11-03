@@ -21,7 +21,8 @@ export default new Vuex.Store({
     stadiums:[],
     add_game:{
       stadiums:[]
-    }
+    },
+    games:[]
   },
   mutations: {
     SET_ERRORS_AUTH(state,errors) {
@@ -39,19 +40,32 @@ export default new Vuex.Store({
       localStorage.removeItem("user_id");
       localStorage.setItem("logged", false);
       window.location = "/"
+    },
+    SET_GAMES(state, games){
+      state.games = games;
+    },
+    SET_AUTH(state, auth){
+      state.auth = auth;
+      if(auth != true&&localStorage.getItem("logged")==true) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user_id");
+        localStorage.setItem("logged", auth);
+        window.location = "/";
+      }
     }
   },
   actions: {
     loginUser({commit}, credentials) {
       axios.post('/login', credentials).then((response) => {
         response = response.data;
-        if(response.status) {
+        console.log(response);
+        if(response.logged&&response.status) {
           localStorage.setItem("user_id", response.user_id);
           localStorage.setItem("token", response.token);
           localStorage.setItem("logged", true)
           location.reload()
         }
-        console.log(response) 
+        commit("SET_AUTH",response.logged);
         commit("SET_ERRORS_AUTH",response.errors);
       })
     },
@@ -62,9 +76,8 @@ export default new Vuex.Store({
       }
       axios.get('/stadiums', { params:credentials }).then((response) => {
         response = response.data;
+        commit("SET_AUTH",response.logged);
         commit("SET_STADIUMS",response);
-        localStorage.setItem("logged", response.status)
-        if(response.status != true) window.location = "/"
       })
     },
     getAddGame({commit, state}){
@@ -74,11 +87,23 @@ export default new Vuex.Store({
       }
       axios.get('/add-game', { params:credentials }).then((response) => {
         response = response.data;
+        commit("SET_AUTH",response.logged);
         commit("SET_ADD_GAME",response);
-        localStorage.setItem("logged", response.status)
-        if(response.status != true) window.location = "/"
       })
-    }
+    },
+    getGames({commit, state},stadium_id) {
+      const data = {
+        user_id:state.user_id,
+        token:state.token,
+        stadium_id
+      }
+      axios.get('/get-games', { params:data }).then((response) => {
+        response = response.data;
+        console.log(response)
+        // commit("SET_AUTH",response.logged);
+        commit("SET_GAMES",response.games);
+      })
+    },
   },
   modules: {
   },
