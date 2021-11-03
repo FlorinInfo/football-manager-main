@@ -26,7 +26,7 @@
       <vs-button class="btn-chat" shadow primary>
         <span class="span">
           {{game.players.length}}/{{game.max_players}}
-        </span> 
+        </span>  
       </vs-button>
     </template>
   </vs-card>
