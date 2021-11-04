@@ -46,7 +46,7 @@ export default new Vuex.Store({
     },
     SET_AUTH(state, auth){
       state.auth = auth;
-      if(auth != true&&localStorage.getItem("logged")==true) {
+      if(auth != true&&localStorage.getItem("logged")=='true') {
         localStorage.removeItem("token");
         localStorage.removeItem("user_id");
         localStorage.setItem("logged", auth);
@@ -76,6 +76,7 @@ export default new Vuex.Store({
       }
       axios.get('/stadiums', { params:credentials }).then((response) => {
         response = response.data;
+        console.log(response)
         commit("SET_AUTH",response.logged);
         commit("SET_STADIUMS",response);
       })
@@ -87,6 +88,7 @@ export default new Vuex.Store({
       }
       axios.get('/add-game', { params:credentials }).then((response) => {
         response = response.data;
+        console.log(response)
         commit("SET_AUTH",response.logged);
         commit("SET_ADD_GAME",response);
       })
@@ -100,7 +102,7 @@ export default new Vuex.Store({
       axios.get('/get-games', { params:data }).then((response) => {
         response = response.data;
         console.log(response)
-        // commit("SET_AUTH",response.logged);
+        // commit("SET_AUTH",response.logged); 
         commit("SET_GAMES",response.games);
       })
     },
