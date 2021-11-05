@@ -36,4 +36,14 @@ html {
     margin-left: auto;
   }
 }
+
+.field-input {
+  min-height: 33px!important;
+  height: 33px!important;
+  border: none!important;
+  border-radius: 12px!important;
+  background: #f4f7f8!important;
+  font-size: 12px!important;
+  color: rgb(0, 0, 0);
+}
 </style>
