@@ -27,7 +27,8 @@ export default new Vuex.Store({
         start:null,
         end:null
       },
-      teams:[]
+      players:[],
+      teams:null
     },
     games:[]
   },
@@ -50,6 +51,10 @@ export default new Vuex.Store({
     },
     SET_GAMES(state, games){
       state.games = games;
+    },
+    SET_ADD_TEAMS(state, teams) {
+      state.add_game.teams = [...teams];
+      console.log(1111111111111111111111)
     },
     SET_AUTH(state, auth){
       state.auth = auth;
@@ -97,9 +102,11 @@ export default new Vuex.Store({
       axios.get('/add-game', { params:credentials }).then((response) => {
         response = response.data;
         console.log(response)
+        console.log(response)
         commit("SET_AUTH",response.logged);
         if(response.game){
-          response.game.teams = response.teams;
+          response.game.teams = [...response.teams];
+          response.game.players = [...response.players];
           console.log(response.game)
           commit("SET_ADD_GAME",response.game);
         }

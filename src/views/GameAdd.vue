@@ -17,14 +17,14 @@
                 <i class='bx bx-trophy' ></i>
                 </template>
             </vs-input>
-            <vs-select
+            <select
                 v-else
-                label-placeholder="Stadion"
+                placeholder="Stadion"
                 v-model="game.stadium_id">
-                <vs-option v-for="s in $store.state.add_game.stadiums" :label="s.name" :key="s._id" :value="s._id">
-                    {{s.name}}
-                </vs-option>
-            </vs-select>
+                <option v-for="s in $store.state.add_game.stadiums" :label="s.name" :key="s._id" :value="s._id">
+                    {{s.name}} 
+                </option>
+            </select>
         </div>
         <div class="app-game-add__input">
             <vs-input v-model="game.max_players" type="number" placeholder="Numar maxim jucatori" :disabled="$store.state.add_game.max_players">
@@ -41,16 +41,17 @@
             </vs-input>
         </div>
         <div class="app-game-add__input" style="display:flex">
-        <vs-input placeholder="Nume echipa">
+        <vs-input placeholder="Nume echipa" v-model="team">
             <template #icon>
                 <i class='bx bxl-microsoft-teams' ></i>
             </template>
         </vs-input>
-        <vs-button>
+        <vs-button @click="addTeam">
             <i class="bx bx-home-alt"></i> Adauga echipa
         </vs-button>
         </div>
         <div class="app-game-add__input" >
+            {{$store.state.add_game.teams}}
             <vs-table>
                 <template #thead>
                 <vs-tr>
@@ -66,32 +67,25 @@
                 </vs-tr>
                 </template>
                 <template #tbody>
-                <vs-tr>
+                <vs-tr v-for="player in $store.state.add_game.players" :key="player._id">
                     <vs-td>
-                    Florin Bucataru
+                    {{player.player_id.first_name}}  {{player.player_id.second_name}} 
                     </vs-td>
                     <vs-td>
                     150
                     </vs-td>
-                    <vs-td>
-                    <vs-select placeholder="Select" v-model="team" v-if="$store.state.add_game.teams">
-                        <vs-option v-for="t in $store.state.add_game.teams" :key="t._id" :label="t.name" value="1">
+                    <vs-td>            
+                    <select placeholder="Select" v-model="z" @change="addTeamPlayer()">
+                        <option v-for="t in $store.state.add_game.teams" :key="t.id" :label="t.name" :value="t._id">
                             {{t.name}}
-                        </vs-option>
-                    </vs-select>
+                        </option>
+                    </select>
                     </vs-td>
                 </vs-tr>
                 </template>
             </vs-table>
         </div>
         <div>
-            <vs-select
-                label-placeholder="Stadion"
-                v-model="team">
-                <vs-option v-for="s in $store.state.add_game.teams" :label="s.name" :key="s._id" value="1">
-                    {{s.name}}
-                </vs-option>
-            </vs-select>
         <vs-button
             @click="addGame"
             block
@@ -122,9 +116,16 @@ export default {
                 }
             },
             team:"",
-            errors:null
+            errors:null,
+            teams:[],
+            z:''
         }
     },
+    // computed:{
+    //     teams(){
+    //         return this.$store.state.add_game.teams;
+    //     }
+    // },
     methods:{
         addGame(){
             const data = {
@@ -134,6 +135,7 @@ export default {
             }
             this.axios.post("/add-game", data).then((response)=>{
                 response = response.data;
+                console.log(response)
                 this.$store.commit("SET_AUTH", response.logged);
                 if(response.status==true) {
                     this.game_id = response.gameSave._id;
@@ -143,20 +145,73 @@ export default {
             }).catch(error=>{
                 console.log(error);
             })
+        },
+        addTeam(){
+            const data = {
+                name:this.team,
+                game:localStorage.getItem("game_id"),
+                token:this.$store.state.token,
+                user_id:this.$store.state.user_id
+            }
+            this.axios.post("/add-team", data).then((response)=>{
+                response = response.data;
+                console.log(response)
+                this.$store.commit("SET_AUTH", response.logged);
+                if(response.status==true) {
+                    this.$store.commit("SET_ADD_TEAMS", response.teams);
+                    this.team = ""
+                }
+            }).catch(error=>{
+                console.log(error);
+            })
+        },
+        addTeamPlayer() {
+            let data = {
+                team_id:this.z,
+                player_id:localStorage.getItem("game_id"),
+                token:this.$store.state.token,
+                user_id:this.$store.state.user_id
+            }
+            this.axios.post("/add-team-player", data).then((response)=>{
+                response = response.data;
+                console.log(response)
+                this.$store.commit("SET_AUTH", response.logged);
+                if(response.status==true) {
+                    console.log(response)
+                    // this.$store.commit("SET_ADD_TEAMS", response.teams);
+                    // this.team = ""
+                }
+            }).catch(error=>{
+                console.log(error);
+            })
         }
     },
     beforeMount(){
         this.$store.dispatch('getAddGame', localStorage.getItem("game_id"));
-       
+    const credentials = {
+        user_id:this.$store.state.user_id,
+        token:this.$store.state.token,
+        game_id:localStorage.getItem("game_id")
+      }
+       this.axios.get('/add-game', { params:credentials }).then((response) => {
+        response = response.data;
+        this.teams = response.teams;
+        // console.log(response.data)   
+      })
     },
     watch:{
+        // team(){
+        //     alert(this.team)
+        // },
         "$store.state.add_game":function(){
             if(this.$store.state.add_game.name) {
                 this.game.name = this.$store.state.add_game.name;
                 this.game.time.start = this.$store.state.add_game.time.start;
                 this.game.time.end = this.$store.state.add_game.time.end;
                 this.game.stadium_id = this.$store.state.add_game.stadium_id;
-                this.stadiums
+                // this.stadiums
+                // this.teams = [...this.$store.state.add_game.teams]
+                console.log(this.teams)
                 this.game.price = this.$store.state.add_game.price;
                 this.game.max_players = this.$store.state.add_game.max_players;
             }
