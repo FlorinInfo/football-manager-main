@@ -191,6 +191,7 @@ export default {
         }
     },
     beforeMount(){
+        const loading = this.$vs.loading()
         this.$store.dispatch('getAddGame', localStorage.getItem("game_id"));
     const credentials = {
         user_id:this.$store.state.user_id,
@@ -200,6 +201,7 @@ export default {
        this.axios.get('/add-game', { params:credentials }).then((response) => {
         response = response.data;
         this.teams = response.teams;
+        loading.close()
         // console.log(response.data)   
       })
     },
