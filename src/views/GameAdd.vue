@@ -1,6 +1,13 @@
 <template>
     <div class="app-game-add" v-if="$store.state.add_game">
-        <div class="app-game-add__input">
+        <h2 class="app-game-add__title">Campionate create</h2>
+
+        <vs-row  >
+        <vs-col lg="6" sm="6" xs="12" style="padding:1rem;" v-for="g in $store.state.add_game.games" :key="g._id">
+          <AppGame :game="g" :edit="true"/>
+        </vs-col>
+      </vs-row>
+        <!-- <div class="app-game-add__input">
             <vs-input v-model="game.name" placeholder="Nume campionat" :disabled="$store.state.add_game.name"  >
                 <template #icon>
                 <i class='bx bx-trophy' ></i>
@@ -93,7 +100,7 @@
         >
             <i class='bx bx-play' ></i>Programeaza campionat
         </vs-button>
-        </div>
+        </div> -->
          
         <!-- {{$store.state.add_game}} -->
     </div>
@@ -203,7 +210,7 @@ export default {
         response = response.data;
         this.teams = response.teams;
         loading.close()
-        // console.log(response.data)   
+        // console.log(response)   
       })
     },
     watch:{
@@ -230,6 +237,10 @@ export default {
 <style lang="scss" scoped>
 .app-game-add {
     padding: 2rem;
+
+    &__title {
+        font-family: $font-semibold;
+    }
 
     &__input {
         margin: 1.5rem;

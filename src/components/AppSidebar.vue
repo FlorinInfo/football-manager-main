@@ -37,7 +37,7 @@
             </template>
             Toate
           </vs-sidebar-item>
-          <vs-sidebar-item :id="s.name" v-for="(s,index) in $store.state.stadiums.stadiums" :key="index" :to="'/campionate/'+s.id">
+          <vs-sidebar-item :id="s.name" v-for="(s,index) in sidebar.stadiums" :key="index" :to="'/campionate/'+s._id">
             <template #icon>
               <i class='bx bx-trophy' ></i>
             </template>
@@ -115,7 +115,10 @@
   export default {
       data(){
           return {
-              active:'home'
+              active:'home',
+              sidebar:{
+                stadiums:[]
+              }
           }
       },
       methods:{
@@ -126,6 +129,13 @@
           logout(){
               this.$store.commit('LOGOUT_USER');
           }
+      },
+      beforeMount(){
+        this.axios.get('/sidebar',).then((response) => {
+          response = response.data; 
+          this.sidebar.stadiums = [...response.stadiums]; 
+          console.log(response)
+        })
       }
   }
   </script>

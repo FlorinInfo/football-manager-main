@@ -8,13 +8,14 @@
 
 
 <script>
-import AppGame from "../components/AppGame.vue";
 export default {
-    components:{
-        AppGame
-    },
     beforeMount(){
         this.$store.dispatch("getGames", this.$route.params.stadium_id);
+    },
+    watch:{
+        '$route.params.stadium_id':function() {
+            this.$store.dispatch("getGames", this.$route.params.stadium_id);
+        }
     }
 }
 </script>

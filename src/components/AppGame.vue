@@ -1,33 +1,35 @@
 <template>
     <div class="app-game">
-      <md-card class="md-card-example" style="max-width:100%;margin-top:20px;" v-for="game in $store.state.games" :key="game._id">
+      <md-card class="md-card-example" style="max-width:100%;margin-top:20px;" >
       <md-card-area md-inset>
         <md-card-media >
           <div class="app-game__background"></div>
         </md-card-media>
         <md-card-header>
           <h2 class="md-title">{{game.name}}</h2>
-          <div class="md-subhead">
-            <md-icon>location_on</md-icon>
-            <span>Stadion Olymp</span>
-            {{game}}
+          <div style="display:flex;justify-content:space-between;margin-top:10px;">
+            <div class="md-subhead">
+              <md-icon>location_on</md-icon>
+              <span>{{game.stadium_id.name}}</span>
+            </div>
+            <div class="md-subhead">
+              <md-icon>people</md-icon>
+              <span style="padding-left:10px;">{{game.players}} / {{game.max_players}}</span>
+            </div>
           </div>
         </md-card-header>
-
-        <md-card-content>
-          Illy Coffee served with a complimentary Leonidas Belgian Chocolate with all beverages.
-        </md-card-content>
       </md-card-area>
 
       <md-card-content>
-        <h3 class="md-subheading">Ora programata</h3>
         <div class="card-reservation" style="">
-          <md-icon>access_time</md-icon>
-          <div class="md-button-group">
-            <div>12:00</div>
-            <!-- <md-button>7:30PM</md-button>
-            <md-button>9:00PM</md-button> -->
-          </div>
+            <div class="md-subhead">
+              <md-icon>schedule</md-icon>
+              <span style="padding-left:10px;">{{game.time.start}}</span>
+            </div>
+            <div class="md-subhead" style="margin-top:10px;">
+              <md-icon>payments</md-icon>
+              <span style="padding-left:10px;">{{Math.round(game.price/game.max_players)}} RON</span>
+            </div>
         </div>
       </md-card-content>
 

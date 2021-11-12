@@ -28,7 +28,8 @@ export default new Vuex.Store({
         end:null
       },
       players:[],
-      teams:null
+      teams:null,
+      games:[]
     },
     games:[]
   },
@@ -107,6 +108,7 @@ export default new Vuex.Store({
         if(response.game){
           response.game.teams = [...response.teams];
           response.game.players = [...response.players];
+          response.game.games = [...response.games]
           console.log(response.game)
           commit("SET_ADD_GAME",response.game);
         }
@@ -126,7 +128,7 @@ export default new Vuex.Store({
         response = response.data;
         console.log(response)
         // commit("SET_AUTH",response.logged); 
-        commit("SET_GAMES",response.games);
+        commit("SET_GAMES",response.games.reverse());
       })
     },
   },

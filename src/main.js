@@ -16,6 +16,9 @@ Vue.use(VueCookies)
 
 // Components
 
+import AppGame from "./components/AppGame.vue";
+Vue.component("AppGame",AppGame)
+
 import Vuesax from 'vuesax'
 
 import 'vuesax/dist/vuesax.css' //Vuesax styles
