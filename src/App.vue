@@ -45,5 +45,6 @@ html {
   background: #f4f7f8!important;
   font-size: 12px!important;
   color: rgb(0, 0, 0);
+  transform: translateX(-8px)
 }
 </style>

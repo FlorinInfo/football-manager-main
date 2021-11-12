@@ -17,14 +17,15 @@
                 <i class='bx bx-trophy' ></i>
                 </template>
             </vs-input>
-            <select
+            <vs-select 
+            :key="$store.state.add_game.stadiums.length"
                 v-else
                 placeholder="Stadion"
                 v-model="game.stadium_id">
-                <option v-for="s in $store.state.add_game.stadiums" :label="s.name" :key="s._id" :value="s._id">
+                <vs-option v-for="s in $store.state.add_game.stadiums" :label="s.name" :key="s._id" :value="s._id">
                     {{s.name}} 
-                </option>
-            </select>
+                </vs-option>
+            </vs-select>
         </div>
         <div class="app-game-add__input">
             <vs-input v-model="game.max_players" type="number" placeholder="Numar maxim jucatori" :disabled="$store.state.add_game.max_players">
@@ -40,7 +41,7 @@
                 </template>
             </vs-input>
         </div>
-        <div class="app-game-add__input" style="display:flex">
+        <div class="app-game-add__input" style="display:flex" v-if="$store.state.add_game.name">
         <vs-input placeholder="Nume echipa" v-model="team">
             <template #icon>
                 <i class='bx bxl-microsoft-teams' ></i>
@@ -75,11 +76,11 @@
                     150
                     </vs-td>
                     <vs-td>            
-                    <select placeholder="Select" v-model="z" @change="addTeamPlayer()">
-                        <option v-for="t in $store.state.add_game.teams" :key="t.id" :label="t.name" :value="t._id">
+                    <vs-select placeholder="Select" :key="$store.state.add_game.teams.length" v-model="z" @change="addTeamPlayer()">
+                        <vs-option v-for="t in $store.state.add_game.teams" :key="t.id" :label="t.name" :value="t._id">
                             {{t.name}}
-                        </option>
-                    </select>
+                        </vs-option>
+                    </vs-select>
                     </vs-td>
                 </vs-tr>
                 </template>
@@ -93,7 +94,7 @@
             <i class='bx bx-play' ></i>Programeaza campionat
         </vs-button>
         </div>
-        {{$store.state.add_game}}
+        <!-- {{$store.state.add_game}} -->
     </div>
 </template>
 
@@ -128,6 +129,7 @@ export default {
     // },
     methods:{
         addGame(){
+            const loading = this.$vs.loading()
             const data = {
                 token:this.$store.state.token,
                 user_id:this.$store.state.user_id,
@@ -141,9 +143,11 @@ export default {
                     this.game_id = response.gameSave._id;
                     localStorage.setItem("game_id", this.game_id);
                     this.$store.dispatch('getAddGame', localStorage.getItem("game_id"));
+                    loading.close()
                 }
             }).catch(error=>{
                 console.log(error);
+                loading.close()
             })
         },
         addTeam(){
