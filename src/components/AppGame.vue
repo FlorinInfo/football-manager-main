@@ -1,35 +1,40 @@
 <template>
     <div class="app-game">
-        <vs-card type="4">
-    <template #title>
-      <h3>{{game.name}}</h3>
-    </template>
-    <template #img>
-      <img src="../assets/images/olymp.jpg" alt="">
-    </template>
-    <template #text >
-      <vs-button
-      style="width:100%"
-        circle
-        color="warn"
-        gradient
-      >
-        Inscrie-te &nbsp; <i class='bx bx-user-plus'></i>
-      </vs-button>
-    </template>
-    <template #interactions>
-      <vs-button danger icon>
-        24.06.2021
-        <br>
-        20:00-22:00
-      </vs-button>
-      <vs-button class="btn-chat" shadow primary>
-        <span class="span">
-          {{game.players.length}}/{{game.max_players}}
-        </span>  
-      </vs-button>
-    </template>
-  </vs-card>
+      <md-card class="md-card-example" style="max-width:100%;margin-top:20px;" v-for="game in $store.state.games" :key="game._id">
+      <md-card-area md-inset>
+        <md-card-media >
+          <div class="app-game__background"></div>
+        </md-card-media>
+        <md-card-header>
+          <h2 class="md-title">{{game.name}}</h2>
+          <div class="md-subhead">
+            <md-icon>location_on</md-icon>
+            <span>Stadion Olymp</span>
+            {{game}}
+          </div>
+        </md-card-header>
+
+        <md-card-content>
+          Illy Coffee served with a complimentary Leonidas Belgian Chocolate with all beverages.
+        </md-card-content>
+      </md-card-area>
+
+      <md-card-content>
+        <h3 class="md-subheading">Ora programata</h3>
+        <div class="card-reservation" style="">
+          <md-icon>access_time</md-icon>
+          <div class="md-button-group">
+            <div>12:00</div>
+            <!-- <md-button>7:30PM</md-button>
+            <md-button>9:00PM</md-button> -->
+          </div>
+        </div>
+      </md-card-content>
+
+      <md-card-actions>
+        <md-button class="md-primary">Inscrie</md-button>
+      </md-card-actions>
+    </md-card>
     </div>
 </template>
 
@@ -45,5 +50,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.app-game {
 
+    &__background {
+        max-height: 200px;
+        height: 200px;
+        background-position: center!important;
+        background-repeat: no-repeat!important;
+        background-size: cover; 
+        background: url("../assets/images/game-background.jpg");
+        width: 100%;
+    }
+}
 </style>

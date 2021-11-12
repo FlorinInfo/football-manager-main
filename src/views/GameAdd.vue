@@ -94,6 +94,7 @@
             <i class='bx bx-play' ></i>Programeaza campionat
         </vs-button>
         </div>
+         
         <!-- {{$store.state.add_game}} -->
     </div>
 </template>

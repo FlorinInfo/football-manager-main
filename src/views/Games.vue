@@ -1,7 +1,7 @@
 <template>
     <div class="app-games">
         <div class="app-games__template" v-for="game in $store.state.games" :key="game._id">
-            <AppGame :game="game"/>
+            <AppGame :game="game"/>       
         </div>
     </div>
 </template>
@@ -22,9 +22,12 @@ export default {
 <style lang="scss" scoped>
 .app-games {
     display: flex;
+    flex-direction: column;
+    padding-left: 20px;
+    padding-right: 20px;
 
     &__template {
-        margin: 0 auto;
+        width: 100%;
     }
 }
 </style>

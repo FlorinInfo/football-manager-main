@@ -23,6 +23,17 @@ Vue.use(Vuesax, {
   // options here
 })
 
+
+// Vue material components
+
+import { MdCard, MdIcon, MdButton } from 'vue-material/dist/components'
+import 'vue-material/dist/vue-material.min.css'
+import 'vue-material/dist/theme/default.css'
+
+Vue.use(MdCard)
+Vue.use(MdIcon)
+Vue.use(MdButton)
+
 import 'boxicons/css/boxicons.min.css'
 
 import VueCtkDateTimePicker from 'vue-ctk-date-time-picker';
