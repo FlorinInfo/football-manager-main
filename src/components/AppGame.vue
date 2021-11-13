@@ -34,7 +34,10 @@
       </md-card-content>
 
       <md-card-actions>
-        <md-button class="md-primary">Inscrie</md-button>
+        <md-button class="md-primary">
+          <span v-if="!edit">Inscrie</span>
+          <span v-else>Editeaza</span>
+        </md-button>
       </md-card-actions>
     </md-card>
     </div>
@@ -46,6 +49,10 @@ export default {
         game:{
             type:Object,
             default:()=>{}
+        },
+        edit:{
+          type:Boolean,
+          default:false
         }
     }
 }

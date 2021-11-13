@@ -108,11 +108,14 @@ export default new Vuex.Store({
         if(response.game){
           response.game.teams = [...response.teams];
           response.game.players = [...response.players];
+          // response.games = response.games.reverse();
           response.game.games = [...response.games]
-          console.log(response.game)
+          response.game.games = response.game.games.reverse()
+          console.log("zzzz",response.game) 
           commit("SET_ADD_GAME",response.game);
         }
         else {
+          response.games = response.games.reverse()
           commit("SET_ADD_GAME",response);
         }
         

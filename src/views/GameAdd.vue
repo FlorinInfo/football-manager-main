@@ -1,12 +1,75 @@
 <template>
     <div class="app-game-add" v-if="$store.state.add_game">
-        <h2 class="app-game-add__title">Campionate create</h2>
-
+        <div style="display:flex;padding:0 20px;">
+            <h2 class="app-game-add__title">Campionate create</h2>
+            <vs-button style="margin-left:auto;" @click="openCreate">
+                <i class='bx bx-add-to-queue'></i> &nbsp;Creeaza campionat
+            </vs-button>
+        </div>
         <vs-row  >
         <vs-col lg="6" sm="6" xs="12" style="padding:1rem;" v-for="g in $store.state.add_game.games" :key="g._id">
           <AppGame :game="g" :edit="true"/>
         </vs-col>
       </vs-row>
+
+      <vs-dialog  v-model="create">
+        <template #header>
+          <h4 class="not-margin">
+            Creeaza campionat
+          </h4>
+        </template>
+
+
+        <div class="con-form">
+            <vs-input v-model="game.name" class="input-top" placeholder="Nume campionat" :disabled="$store.state.add_game.name"  >
+                <template #icon>
+                <i class='bx bx-trophy' ></i>
+                </template>
+                <template #message-danger v-if="errors&&errors.name" >
+                    <span style="display:block;margin-top:-8px!important; ">{{errors.name}}</span>
+                </template>
+            </vs-input>
+            <vs-input v-model="game.max_players" class="input-top" type="number" placeholder="Numar maxim jucatori">
+                <template #icon>
+                    <i class='bx bx-user' ></i>
+                </template>
+                <template #message-danger v-if="errors&&errors.max_players" >
+                    <span style="display:block;margin-top:-8px!important; ">{{errors.max_players}}</span>
+                </template>
+            </vs-input>
+            <vs-input v-model="game.price" type="number" class="input-top" placeholder="Pret" >
+                <template #icon>
+                    <i class='bx bx-money' ></i>
+                </template>
+                <template #message-danger v-if="errors&&errors.price" >
+                    <span style="display:block;margin-top:-8px!important; ">{{errors.price}}</span>
+                </template>
+            </vs-input>
+            <vs-select 
+                style="margin-top:10px;"
+                class="input-top"
+                :key="$store.state.add_game.stadiums.length"
+                placeholder="Stadion"
+                v-model="game.stadium_id">
+                <vs-option v-for="s in $store.state.add_game.stadiums" :label="s.name" :key="s._id" :value="s._id">
+                    {{s.name}} 
+                </vs-option>
+                <template #message-danger v-if="errors&&errors.stadium_id" >
+                    <span style="display:block; ">{{errors.stadium_id}}</span>
+                </template>
+            </vs-select>
+            <VueCtkDateTimePicker label="Incepe la"  class="app-game-add__time-el input-top" v-model="game.time.start" :disabled="$store.state.add_game.name" />
+            <VueCtkDateTimePicker label="Sfarseste la" class="app-game-add__time-el input-top" v-model="game.time.end" :disabled="$store.state.add_game.name"/>
+            <span v-if="errors&&errors.time" class="err-template">{{errors.time}}</span>
+        </div>
+        <template #footer>
+          <div class="footer-dialog">
+            <vs-button block @click="addGame">
+              Creeaza
+            </vs-button>
+          </div>
+        </template>
+      </vs-dialog>
         <!-- <div class="app-game-add__input">
             <vs-input v-model="game.name" placeholder="Nume campionat" :disabled="$store.state.add_game.name"  >
                 <template #icon>
@@ -127,7 +190,8 @@ export default {
             team:"",
             errors:null,
             teams:[],
-            z:''
+            z:'',
+            create:false
         }
     },
     // computed:{
@@ -148,11 +212,23 @@ export default {
                 console.log(response)
                 this.$store.commit("SET_AUTH", response.logged);
                 if(response.status==true) {
-                    this.game_id = response.gameSave._id;
-                    localStorage.setItem("game_id", this.game_id);
                     this.$store.dispatch('getAddGame', localStorage.getItem("game_id"));
-                    loading.close()
+                    this.game.name = "";
+                    this.game.price = "";
+                    this.game.time.start = "";
+                    this.game.time.end = "";
+                    this.game.max_players = "";
+                    this.game.stadium_id = "";
+                    // this.game_id = response.gameSave._id;
+                    // localStorage.setItem("game_id", this.game_id);
+                    // this.$store.dispatch('getAddGame', localStorage.getItem("game_id"));
+                    this.create = false;
                 }
+                else {
+                    this.errors = response.errors;
+                    console.log(this.errors)
+                }
+                loading.close()
             }).catch(error=>{
                 console.log(error);
                 loading.close()
@@ -196,6 +272,9 @@ export default {
             }).catch(error=>{
                 console.log(error);
             })
+        },
+        openCreate() {
+            this.create = true;
         }
     },
     beforeMount(){
@@ -252,10 +331,21 @@ export default {
         justify-content: start;
 
         &-el {
-            width: 200px;
-            margin-left: 2rem;
-            margin-top: 1rem;
+            width: 100%;
+            margin-left: .5rem;
+            margin-top: 1.5rem!important;
         }
     }
+}
+
+.input-top {
+    margin-top: 0px;
+}
+
+.err-template {
+    font-size: .7rem;
+    display: block;
+    margin-left: .6rem;
+    color: #ff5a68;
 }
 </style>

@@ -14,10 +14,15 @@ html {
 .con-form .vs-input-content .vs-input, .vs-select{
       width: 100%;
       font-size: 16px;
+      
 }
 .con-form .vs-input-content {
     margin: 10px 0px;
     width: calc(100%);
+  }
+
+  .vs-select-content {
+      max-width: 10000px!important;
   }
 
   .vs-card__text {

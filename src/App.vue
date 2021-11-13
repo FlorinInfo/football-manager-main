@@ -51,4 +51,8 @@ html {
 .field-label {
   top:-20px!important;
 }
+
+#undefined-input {
+  padding-top:0!important;
+}
 </style>
