@@ -5,6 +5,7 @@ import Home from '../views/Homepage.vue'
 import Games from "../views/Games.vue";
 import Stadiums from "../views/Stadiums.vue";
 import GameAdd from "../views/GameAdd.vue";
+import Statistics from "../views/Statistics.vue";
 
 Vue.use(VueRouter)
 
@@ -28,6 +29,11 @@ const routes = [
     path:"/creeaza-campionat",
     name:"GameAdd",
     component:GameAdd
+  },
+  {
+    path:"/statistici/:type",
+    name:"Statistics",
+    component:Statistics
   }
 ]
 

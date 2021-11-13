@@ -46,26 +46,26 @@
         </vs-sidebar-group>
         <vs-sidebar-group>
           <template #header>
-            <vs-sidebar-item arrow>
+            <vs-sidebar-item arrow >
               <template #icon>
                 <i class='bx bx-stats' ></i>
               </template>
               Statistici
             </vs-sidebar-item>
           </template>
-          <vs-sidebar-item id="github">
+          <vs-sidebar-item id="github" to='/statistici/jucatori'>
             <template #icon>
               <i class='bx bx-group'></i>
             </template>
             Jucatori
           </vs-sidebar-item>
-          <vs-sidebar-item id="codepen">
+          <vs-sidebar-item id="codepen" to='/statistici/echipe'>
             <template #icon>
               <i class='bx bxl-microsoft-teams' ></i>
             </template>
             Echipe
           </vs-sidebar-item>
-          <vs-sidebar-item id="discord">
+          <vs-sidebar-item id="discord" to='/statistici/campionate'>
             <template #icon>
               <i class='bx bx-football' ></i>
             </template>
