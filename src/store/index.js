@@ -31,7 +31,8 @@ export default new Vuex.Store({
       teams:null,
       games:[]
     },
-    games:[]
+    games:[],
+    loader:false
   },
   mutations: {
     SET_ERRORS_AUTH(state,errors) {
@@ -130,7 +131,7 @@ export default new Vuex.Store({
       axios.get('/get-games', { params:data }).then((response) => {
         response = response.data;
         console.log(response)
-        // commit("SET_AUTH",response.logged); 
+        commit("SET_AUTH",response.logged); 
         commit("SET_GAMES",response.games.reverse());
       })
     },

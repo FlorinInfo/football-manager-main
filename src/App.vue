@@ -19,7 +19,8 @@ import AppSiderbar from "./components/AppSidebar.vue"
 export default {
   components:{
     AppSiderbar
-  }
+  },
+
 }
 </script>
 

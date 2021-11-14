@@ -35,7 +35,11 @@
 
       <md-card-actions>
         <md-button class="md-primary">
-          <span v-if="!edit">Inscrie</span>
+          <span v-if="!edit">
+            <span v-if="game.players==game.max_players">In proces</span>
+            <span v-else-if="game.reg" @click="$emit('registerToGame',game._id)">Inscris</span>
+            <span v-if="game.reg==false&&game.players!=game.max_players" @click="$emit('registerToGame',game._id)">Inscrie-te</span>
+          </span>
           <span v-else>Editeaza</span>
         </md-button>
       </md-card-actions>
