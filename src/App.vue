@@ -34,6 +34,7 @@ html {
   &__main {
     width: calc(100vw - 50px);
     margin-left: auto;
+    padding: 2rem;
   }
 }
 
