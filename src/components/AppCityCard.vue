@@ -23,8 +23,8 @@ export default {
 .app-city-card {
     width: 95vw;
     height: 25vh;
-    background-image: linear-gradient(to right bottom, rgba(0, 0, 0, 0.8), rgba(255, 255, 255, 0)),url("../assets/images/olymp.jpg");
-    background-position: bottom;
+    background-image: linear-gradient(to right bottom, rgba(0, 0, 0, 0.8), rgba(255, 255, 255, 0)),url("../assets/images/didi.jpg");
+    background-position: center;
     background-size: cover;
     max-width: 100vw;
     box-shadow: 0 3rem 6rem rgba(0, 0, 0, 0.096);

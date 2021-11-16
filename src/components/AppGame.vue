@@ -3,14 +3,16 @@
       <md-card class="md-card-example" style="max-width:100%;margin-top:20px;" >
       <md-card-area md-inset>
         <md-card-media >
-          <div class="app-game__background"></div>
+          <div class="app-game__background" @click="goLink"></div>
         </md-card-media>
         <md-card-header>
-          <h2 class="md-title">{{game.name}}</h2>
+          <h2 class="md-title" @click="goLink">{{game.name}}</h2>
           <div style="display:flex;justify-content:space-between;margin-top:10px;">
             <div class="md-subhead">
               <md-icon>location_on</md-icon>
-              <span>{{game.stadium_id.name}}</span>
+              <span>
+                <router-link class="app-game__link" :to="'/campionate/' + game.stadium_id._id">{{game.stadium_id.name}}</router-link>
+              </span>
             </div>
             <div class="md-subhead">
               <md-icon>people</md-icon>
@@ -57,7 +59,16 @@ export default {
         edit:{
           type:Boolean,
           default:false
+        },
+        extented:{
+          type:Boolean,
+          default:false
         }
+    },
+    methods:{
+      goLink(){
+        this.$router.push("/campionat/" + this.game._id);
+      }
     }
 }
 </script>
@@ -73,6 +84,16 @@ export default {
         background-size: cover; 
         background: url("../assets/images/game-background.jpg");
         width: 100%;
+        cursor: pointer;
     }
+
+    &__link {
+      color: black!important;
+      text-decoration: none;
+    }
+}
+
+.md-title {
+  cursor: pointer;
 }
 </style>

@@ -1,7 +1,8 @@
 <template>
     <div class="app-game-add" v-if="$store.state.add_game">
         <div style="display:flex;padding:0 20px;">
-            <h2 class="app-game-add__title">Campionate create</h2>
+            <h2 class="app-game-add__title" v-if="$store.state.add_game.games.length==0">Nu ai creat nici un campionat pana acum.</h2>
+            <h2 class="app-game-add__title" v-else>Campionate create</h2>
             <vs-button style="margin-left:auto;" @click="openCreate">
                 <i class='bx bx-add-to-queue'></i> &nbsp;Creeaza campionat
             </vs-button>

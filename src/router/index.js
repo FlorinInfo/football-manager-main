@@ -1,11 +1,12 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
-import Home from '../views/Homepage.vue'
+import Home from '../views/Homepage.vue';
 import Games from "../views/Games.vue";
 import Stadiums from "../views/Stadiums.vue";
 import GameAdd from "../views/GameAdd.vue";
 import Statistics from "../views/Statistics.vue";
+import Game from "../views/Game.vue";
 
 Vue.use(VueRouter)
 
@@ -34,6 +35,11 @@ const routes = [
     path:"/statistici/:type",
     name:"Statistics",
     component:Statistics
+  },
+  {
+    path:"/campionat/:id",
+    name:"Campionat",
+    component:Game
   }
 ]
 
