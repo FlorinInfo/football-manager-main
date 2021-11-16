@@ -45,6 +45,7 @@
           <span v-else>Editeaza</span>
         </md-button>
       </md-card-actions>
+      {{game.playersFull}}
     </md-card>
     </div>
 </template>

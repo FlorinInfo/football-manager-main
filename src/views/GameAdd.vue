@@ -291,7 +291,7 @@ export default {
         this.teams = response.teams;
         loading.close()
         // console.log(response)   
-      })
+        })
     },
     watch:{
         // team(){
