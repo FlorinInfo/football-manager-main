@@ -32,7 +32,8 @@ export default new Vuex.Store({
       games:[]
     },
     games:[],
-    loader:false
+    loader:false,
+    d_team:false
   },
   mutations: {
     SET_ERRORS_AUTH(state,errors) {
@@ -44,6 +45,9 @@ export default new Vuex.Store({
     },
     SET_ADD_GAME(state, game) {
       state.add_game = game;
+    },
+    SET_D_TEAM(state, d_team) {
+      state.d_team = d_team;
     },
     LOGOUT_USER(){
       localStorage.removeItem("token");

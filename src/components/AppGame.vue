@@ -1,5 +1,5 @@
 <template>
-    <div class="app-game">
+    <div class="app-game" v-if="game">
       <md-card class="md-card-example" style="max-width:100%;margin-top:20px;" >
       <md-card-area md-inset>
         <md-card-media >
@@ -34,8 +34,7 @@
             </div>
         </div>
       </md-card-content>
-
-      <md-card-actions>
+      <md-card-actions >
         <md-button class="md-primary">
           <span v-if="!edit">
             <span v-if="game.players==game.max_players">In proces</span>
@@ -44,14 +43,78 @@
           </span>
           <span v-else>Editeaza</span>
         </md-button>
+        <md-button class="md-primary md-raised" v-if="game.org_id==$store.state.user_id&&extented==true" @click="openDTeam">
+          <span>Adauga echipe</span> 
+        </md-button>
       </md-card-actions>
-      {{game.playersFull}}
+      <div class="app-game__extend" v-if="extented">
+        <vs-table striped>
+    <template #thead>
+      <vs-tr>
+        <vs-th>
+          Nume Prenume
+        </vs-th>
+        <vs-th>
+          Goluri
+        </vs-th>
+        <vs-th>
+          Echipa
+        </vs-th>
+      </vs-tr>
+    </template>
+    <template #tbody>
+      <vs-tr
+        :key="i"
+        v-for="(tr, i) in game.playersFull"
+        :data="tr"
+      >
+        <vs-td>
+          {{ tr.player_id.first_name }} {{ tr.player_id.second_name }}
+        </vs-td>
+        <vs-td>
+         {{ tr.player_id.stats.goals }} 
+        </vs-td>
+        <vs-td>
+        <vs-select placeholder="Select" v-model="team">
+            <vs-option label="Vuesax" value="1">
+              Vuesax
+            </vs-option>
+            <vs-option label="Vue" value="2">
+              Vue
+            </vs-option>
+            <vs-option label="Javascript" value="3">
+              Javascript
+            </vs-option>
+            <vs-option disabled label="Sass" value="4">
+              Sass
+            </vs-option>
+            <vs-option label="Typescript" value="5">
+              Typescript
+            </vs-option>
+            <vs-option label="Webpack" value="6">
+              Webpack
+            </vs-option>
+            <vs-option label="Nodejs" value="7">
+              Nodejs
+            </vs-option>
+          </vs-select>
+        </vs-td>
+      </vs-tr>
+    </template>
+  </vs-table>
+        <!-- {{game.playersFull}} -->
+      </div>
     </md-card>
+    <AppAddTeam />
     </div>
 </template>
 
 <script>
+import AppAddTeam from "../components/AppAddTeam.vue";
 export default {
+  components:{
+    AppAddTeam
+  },
     props:{
         game:{
             type:Object,
@@ -66,9 +129,17 @@ export default {
           default:false
         }
     },
+    data(){
+      return {
+        team:""
+      }
+    },
     methods:{
       goLink(){
         this.$router.push("/campionat/" + this.game._id);
+      },
+      openDTeam() {
+        this.$store.commit("SET_D_TEAM", true);
       }
     }
 }
@@ -91,6 +162,10 @@ export default {
     &__link {
       color: black!important;
       text-decoration: none;
+    }
+
+    &__extend {
+      padding: 10px;
     }
 }
 

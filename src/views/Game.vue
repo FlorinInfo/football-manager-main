@@ -1,6 +1,6 @@
 <template>
     <div class="app-game-view">
-        <AppGame :game="game"/>
+        <AppGame :game="game" :extented="true" @registerToGame="registerToGame"/>
     </div>
 </template>
 
@@ -10,6 +10,40 @@ export default {
         return {
             game:null
         }
+    },
+    methods:{
+        registerToGame(id) {
+            console.log(1)
+            let data = {
+                user_id:this.$store.state.user_id,
+                token:this.$store.state.token,
+                game_id:id
+            }
+            console.log(id)
+            const loading = this.$vs.loading()
+            this.axios.post('/register-to-game',data).then((response) => {
+            loading.close()
+                if(response.data.status){
+                this.$vs.notification({
+                    progress: 'auto',
+                    color:"success",
+                    position:"top-right",
+                    title: 'Super, super! 😎',
+                    text: 'Te-ai inscris cu succes la campionat.Bafta bossulica! '
+                })
+                this.$store.dispatch("getGames", this.$route.params.stadium_id);
+            }
+            else {
+                this.$vs.notification({
+                    progress: 'auto',
+                    color:"danger",
+                    position:"top-right",
+                    title: 'Sorry, sorry! 🤨',
+                    text: 'Te-ai inscris deja la acest campionat bossulica... '
+                })
+            }
+            })
+        }  
     },
     beforeMount() {
         const loading = this.$vs.loading()
