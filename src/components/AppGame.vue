@@ -75,27 +75,9 @@
          {{ tr.player_id.stats.goals }} 
         </vs-td>
         <vs-td>
-        <vs-select placeholder="Select" v-model="team">
-            <vs-option label="Vuesax" value="1">
-              Vuesax
-            </vs-option>
-            <vs-option label="Vue" value="2">
-              Vue
-            </vs-option>
-            <vs-option label="Javascript" value="3">
-              Javascript
-            </vs-option>
-            <vs-option disabled label="Sass" value="4">
-              Sass
-            </vs-option>
-            <vs-option label="Typescript" value="5">
-              Typescript
-            </vs-option>
-            <vs-option label="Webpack" value="6">
-              Webpack
-            </vs-option>
-            <vs-option label="Nodejs" value="7">
-              Nodejs
+        <vs-select placeholder="Select" @input="addTeamPlayer(tr._id)" v-model="team" :key="$store.state.add_game.teams.length">
+            <vs-option :label="t.name" :value="t._id" v-for="(t) in $store.state.add_game.teams" :key="t._id">
+              {{t.name}}
             </vs-option>
           </vs-select>
         </vs-td>
@@ -105,7 +87,7 @@
         <!-- {{game.playersFull}} -->
       </div>
     </md-card>
-    <AppAddTeam />
+    <AppAddTeam @addTeam="addTeam"/>
     </div>
 </template>
 
@@ -140,7 +122,66 @@ export default {
       },
       openDTeam() {
         this.$store.commit("SET_D_TEAM", true);
-      }
+      },
+      addTeam(name){
+          const data = {
+              name:name,
+              game:this.game._id,
+              token:this.$store.state.token,
+              user_id:this.$store.state.user_id
+          };
+          this.axios.post("/add-team", data).then((response)=>{
+              response = response.data;
+              console.log(response)
+              this.$store.commit("SET_AUTH", response.logged);
+              if(response.status==true) {
+                  this.$store.commit("SET_ADD_TEAMS", response.teams);
+                  this.$vs.notification({
+                    progress: 'auto',
+                    color:"success",
+                    position:"top-right",
+                    title: 'Super, super! 😎',
+                    text: `Echipa ${name} a fost adaugata cu succes.`
+                })
+                this.$store.commit("SET_D_TEAM", false);
+              }
+              else {
+                this.$vs.notification({
+                    progress: 'auto',
+                    color:"danger",
+                    position:"top-right",
+                    title: 'Super, super! 😎',
+                    text: `Echipa ${name} nu poate fi adaugata.`
+                })
+              }
+
+          }).catch(error=>{
+              console.log(error);
+          })
+      },
+      addTeamPlayer(id) {
+        console.log(this.team)
+        let data = {
+            game_id:this.game._id,
+            team_id:this.team,
+            player_id:id,
+            token:this.$store.state.token,
+            user_id:this.$store.state.user_id
+        }
+        console.log(data);
+        this.axios.post("/add-team-player", data).then((response)=>{
+            response = response.data;
+            console.log(response)
+            this.$store.commit("SET_AUTH", response.logged);
+            if(response.status==true) {
+                console.log(response)
+                // this.$store.commit("SET_ADD_TEAMS", response.teams);
+                // this.team = ""
+            }
+        }).catch(error=>{
+            console.log(error);
+        })
+      },
     }
 }
 </script>

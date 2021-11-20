@@ -28,7 +28,7 @@ export default new Vuex.Store({
         end:null
       },
       players:[],
-      teams:null,
+      teams:[],
       games:[]
     },
     games:[],
@@ -60,7 +60,6 @@ export default new Vuex.Store({
     },
     SET_ADD_TEAMS(state, teams) {
       state.add_game.teams = [...teams];
-      console.log(1111111111111111111111)
     },
     SET_AUTH(state, auth){
       state.auth = auth;

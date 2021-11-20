@@ -235,45 +235,6 @@ export default {
                 loading.close()
             })
         },
-        addTeam(){
-            const data = {
-                name:this.team,
-                game:localStorage.getItem("game_id"),
-                token:this.$store.state.token,
-                user_id:this.$store.state.user_id
-            }
-            this.axios.post("/add-team", data).then((response)=>{
-                response = response.data;
-                console.log(response)
-                this.$store.commit("SET_AUTH", response.logged);
-                if(response.status==true) {
-                    this.$store.commit("SET_ADD_TEAMS", response.teams);
-                    this.team = ""
-                }
-            }).catch(error=>{
-                console.log(error);
-            })
-        },
-        addTeamPlayer() {
-            let data = {
-                team_id:this.z,
-                player_id:localStorage.getItem("game_id"),
-                token:this.$store.state.token,
-                user_id:this.$store.state.user_id
-            }
-            this.axios.post("/add-team-player", data).then((response)=>{
-                response = response.data;
-                console.log(response)
-                this.$store.commit("SET_AUTH", response.logged);
-                if(response.status==true) {
-                    console.log(response)
-                    // this.$store.commit("SET_ADD_TEAMS", response.teams);
-                    // this.team = ""
-                }
-            }).catch(error=>{
-                console.log(error);
-            })
-        },
         openCreate() {
             this.create = true;
         }

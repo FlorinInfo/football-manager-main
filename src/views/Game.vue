@@ -43,7 +43,7 @@ export default {
                 })
             }
             })
-        }  
+        }
     },
     beforeMount() {
         const loading = this.$vs.loading()
@@ -55,6 +55,7 @@ export default {
         this.axios.get('/get-game', { params:credentials }).then((response) => {
         response = response.data;
         this.game = {...response.game};
+        this.$store.commit("SET_ADD_TEAMS", response.game.teams);
         loading.close()
         console.log(response)   
         })

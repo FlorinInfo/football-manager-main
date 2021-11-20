@@ -9,10 +9,11 @@
             <div class="con-form" style="display:block;">
             <vs-input
                 primary
-            
+                v-model="name"
                 placeholder="Nume echipa" />
                 <div style="margin:0 auto;display:flex;justify-content:center;">
                 <vs-button
+                    @click="addTeam"
                     circle
                     icon
                     floating
@@ -29,12 +30,16 @@
 export default {
     data() {
         return {
-            opened:false
+            opened:false,
+            name:""
         }
     },
     methods:{
         closeDialog() {
             this.$store.commit("SET_D_TEAM", false);
+        },
+        addTeam() {
+            this.$emit('addTeam', this.name);
         }
     },
     watch:{
