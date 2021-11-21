@@ -72,12 +72,12 @@
           {{ tr.player_id.first_name }} {{ tr.player_id.second_name }}
         </vs-td>
         <vs-td>
-         {{ tr.player_id.stats.goals }} 
+         {{ tr.player_id.stats.goals }}
         </vs-td>
         <vs-td>
-        <vs-select placeholder="Select" @input="addTeamPlayer(tr._id)" v-model="team" :key="$store.state.add_game.teams.length">
+        <vs-select placeholder="Select" @input="addTeamPlayer(tr._id, tr.team.team_id)" v-model="tr.team.team_id" :key="$store.state.add_game.teams.length">
             <vs-option :label="t.name" :value="t._id" v-for="(t) in $store.state.add_game.teams" :key="t._id">
-              {{t.name}}
+              {{t.name}} 
             </vs-option>
           </vs-select>
         </vs-td>
@@ -159,11 +159,11 @@ export default {
               console.log(error);
           })
       },
-      addTeamPlayer(id) {
-        console.log(this.team)
+      addTeamPlayer(id, team) {
+        console.log(team)
         let data = {
             game_id:this.game._id,
-            team_id:this.team,
+            team_id:team,
             player_id:id,
             token:this.$store.state.token,
             user_id:this.$store.state.user_id
