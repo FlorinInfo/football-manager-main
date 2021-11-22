@@ -13,7 +13,6 @@ export default {
     },
     methods:{
         registerToGame(id) {
-            console.log(1)
             let data = {
                 user_id:this.$store.state.user_id,
                 token:this.$store.state.token,
@@ -31,7 +30,7 @@ export default {
                     title: 'Super, super! 😎',
                     text: 'Te-ai inscris cu succes la campionat.Bafta bossulica! '
                 })
-                this.$store.dispatch("getGames", this.$route.params.stadium_id);
+                this.loadPage();
             }
             else {
                 this.$vs.notification({
@@ -43,22 +42,25 @@ export default {
                 })
             }
             })
+        },
+        loadPage() {
+            const loading = this.$vs.loading()
+            const credentials = {
+                user_id:this.$store.state.user_id,
+                token:this.$store.state.token,
+                game_id:this.$route.params.id
+            }
+            this.axios.get('/get-game', { params:credentials }).then((response) => {
+            response = response.data;
+            this.game = {...response.game};
+            this.$store.commit("SET_ADD_TEAMS", response.game.teams);
+            loading.close()
+            console.log(response)   
+            })
         }
     },
     beforeMount() {
-        const loading = this.$vs.loading()
-        const credentials = {
-            user_id:this.$store.state.user_id,
-            token:this.$store.state.token,
-            game_id:this.$route.params.id
-        }
-        this.axios.get('/get-game', { params:credentials }).then((response) => {
-        response = response.data;
-        this.game = {...response.game};
-        this.$store.commit("SET_ADD_TEAMS", response.game.teams);
-        loading.close()
-        console.log(response)   
-        })
+        this.loadPage();
     }
 }
 </script>

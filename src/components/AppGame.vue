@@ -36,12 +36,12 @@
       </md-card-content>
       <md-card-actions >
         <md-button class="md-primary">
-          <span v-if="!edit">
+          <div v-if="!edit">
             <span v-if="game.players==game.max_players">In proces</span>
             <span v-else-if="game.reg" @click="$emit('registerToGame',game._id)">Inscris</span>
             <span v-if="game.reg==false&&game.players!=game.max_players" @click="$emit('registerToGame',game._id)">Inscrie-te</span>
-          </span>
-          <span v-else>Editeaza</span>
+          </div>
+          <span v-else @click="goLink">Vezi campionat</span>
         </md-button>
         <md-button class="md-primary md-raised" v-if="game.org_id==$store.state.user_id&&extented==true" @click="openDTeam">
           <span>Adauga echipe</span> 
@@ -75,11 +75,12 @@
          {{ tr.player_id.stats.goals }}
         </vs-td>
         <vs-td>
-        <vs-select placeholder="Select" @input="addTeamPlayer(tr._id, tr.team.team_id)" v-model="tr.team.team_id" :key="$store.state.add_game.teams.length">
+          <vs-select v-if="$store.state.user_id==game.org_id" placeholder="Select" @input="addTeamPlayer(tr._id, tr.team.team_id)" v-model="tr.team.team_id" :key="$store.state.add_game.teams.length">
             <vs-option :label="t.name" :value="t._id" v-for="(t) in $store.state.add_game.teams" :key="t._id">
               {{t.name}} 
             </vs-option>
           </vs-select>
+          <span v-else>xxxx</span>
         </vs-td>
       </vs-tr>
     </template>
