@@ -42,13 +42,17 @@
             </div>
         </div>
         <div v-else class="app-homepage-logged"> 
-
+            <LiveMatch/>
         </div>
     </div>
 </template>
 
 <script>
+    import LiveMatch from "../components/LiveMatch.vue";
     export default {
+      components:{
+          LiveMatch
+      },
       data:() => ({
         active: false,
         login:{

@@ -35,6 +35,7 @@
         </div>
       </md-card-content>
       <md-card-actions >
+        
         <md-button class="md-primary">
           <div v-if="!edit">
             <span v-if="game.players==game.max_players">In proces</span>
@@ -75,12 +76,12 @@
          {{ tr.player_id.stats.goals }}
         </vs-td>
         <vs-td>
-          <vs-select v-if="$store.state.user_id==game.org_id" placeholder="Select" @input="addTeamPlayer(tr._id, tr.team.team_id)" v-model="tr.team.team_id" :key="$store.state.add_game.teams.length">
+          <vs-select v-if="$store.state.user_id==game.org_id&&$store.state.add_game.teams.length" placeholder="Select" @input="addTeamPlayer(tr._id, tr.team.team_id)" v-model="tr.team.team_id" :key="$store.state.add_game.teams.length">
             <vs-option :label="t.name" :value="t._id" v-for="(t) in $store.state.add_game.teams" :key="t._id">
               {{t.name}} 
             </vs-option>
           </vs-select>
-          <span v-else>xxxx</span>
+          <span v-else-if="tr.team">{{tr.team.team_id.name}} </span>
         </vs-td>
       </vs-tr>
     </template>
@@ -145,6 +146,7 @@ export default {
                     text: `Echipa ${name} a fost adaugata cu succes.`
                 })
                 this.$store.commit("SET_D_TEAM", false);
+                this.$emit("loadTeams");
               }
               else {
                 this.$vs.notification({

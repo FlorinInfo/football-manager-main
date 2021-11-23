@@ -1,6 +1,6 @@
 <template>
     <div class="app-game-view">
-        <AppGame :game="game" :extented="true" @registerToGame="registerToGame"/>
+        <AppGame :game="game" :extented="true" @registerToGame="registerToGame" @loadTeams="loadPage"/>
     </div>
 </template>
 

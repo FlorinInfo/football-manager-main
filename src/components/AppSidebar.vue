@@ -10,7 +10,7 @@
         <template #logo>
           <!-- ...img logo -->
         </template>
-        <vs-sidebar-item id="home">
+        <vs-sidebar-item id="home" to="/">
           <template #icon>
             <i class='bx bx-home'></i>
           </template>
