@@ -1,54 +1,107 @@
 <template>
     <div class="app-live-match">
-        <div class="app-live-match__top">
-            <span>Campionatul lui Georgel &nbsp; <i class='bx bxs-trophy'></i></span>
-            <span><i class='bx bxs-map-pin' ></i> &nbsp; Stadion Olymp</span>
+        <div class="app-live-match__general">
+            <div class="app-live-match__top">
+                <span>Campionatul lui Georgel &nbsp; <i class='bx bxs-trophy'></i></span>
+                <span><i class='bx bxs-map-pin' ></i> &nbsp; Stadion Olymp</span>
+            </div>
+            <div class="app-live-match__center">
+                <div class="app-live-match__center-templates">
+                    <div class="app-live-match__center-template">
+                        <img src="../assets/images/club.png" alt="">
+                        <div class="app-live-match__center-template-name">
+                        Japanez
+                        </div>
+                        <!-- <ul>
+                            <li><img src="../assets/images/red-tshirt.png" alt=""> <span>Ionel Fotbal</span></li>
+                            <li><img src="../assets/images/red-tshirt.png" alt=""> <span>Ionel Fotbal</span></li>
+                            <li><img src="../assets/images/red-tshirt.png" alt=""> <span>Ionel Fotbal</span></li>
+                        </ul> -->
+                    </div>
+                    <div class="app-live-match__center-templates-center">
+                        <div class="app-live-match__center-templates-center-score">0 - 0</div>
+                        <span class="app-live-match__center-templates-center-status"><i class='bx bx-play' ></i> &nbsp;Pauza</span>
+                        <!-- <span class="app-live-match__center-templates-center-status"><i class='bx bx-play' ></i> &nbsp;10:00</span> -->
+                        <!-- <span class="app-live-match__center-templates-center-timer">09:35</span> -->
+                    </div>
+                    <div class="app-live-match__center-template">
+                        <img src="../assets/images/club.png" alt="">
+                        <div class="app-live-match__center-template-name">
+                        Japanez II
+                        </div>
+                        <!-- <ul>
+                            <li><img src="../assets/images/red-tshirt.png" alt=""> <span>Ionel Fotbal</span></li>
+                            <li><img src="../assets/images/red-tshirt.png" alt=""> <span>Ionel Fotbal</span></li>
+                            <li><img src="../assets/images/red-tshirt.png" alt=""> <span>Ionel Fotbal</span></li>
+                        </ul> -->
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="app-live-match__center">
-            <div class="app-live-match__center-templates">
-                <div class="app-live-match__center-template">
-                    <img src="../assets/images/club.png" alt="">
-                    <div class="app-live-match__center-template-name">
-                    Japanez
-                    </div>
-                    <!-- <ul>
-                        <li><img src="../assets/images/red-tshirt.png" alt=""> <span>Ionel Fotbal</span></li>
-                        <li><img src="../assets/images/red-tshirt.png" alt=""> <span>Ionel Fotbal</span></li>
-                        <li><img src="../assets/images/red-tshirt.png" alt=""> <span>Ionel Fotbal</span></li>
-                    </ul> -->
+        <div class="app-live-match__stats">
+            <div class="app-live-match__stats-bar">
+                <div 
+                    class="app-live-match__stats-bar-element" 
+                    :class="{'app-live-match__stats-bar-element--active':activeSection==0}"
+                    @click="changeSection(0)"
+                >
+                    <span>Live</span>
                 </div>
-                <div class="app-live-match__center-templates-center">
-                    <div class="app-live-match__center-templates-center-score">0 - 0</div>
-                    <span class="app-live-match__center-templates-center-status"><i class='bx bx-play' ></i> &nbsp;Pauza</span>
-                    <!-- <span class="app-live-match__center-templates-center-status"><i class='bx bx-play' ></i> &nbsp;10:00</span> -->
-                    <!-- <span class="app-live-match__center-templates-center-timer">09:35</span> -->
+                <div 
+                    class="app-live-match__stats-bar-element" 
+                    :class="{'app-live-match__stats-bar-element--active':activeSection==1}"
+                    @click="changeSection(1)"
+                >
+                    <span>Meciuri</span>
                 </div>
-                <div class="app-live-match__center-template">
-                    <img src="../assets/images/club.png" alt="">
-                    <div class="app-live-match__center-template-name">
-                    Japanez II
-                    </div>
-                    <!-- <ul>
-                        <li><img src="../assets/images/red-tshirt.png" alt=""> <span>Ionel Fotbal</span></li>
-                        <li><img src="../assets/images/red-tshirt.png" alt=""> <span>Ionel Fotbal</span></li>
-                        <li><img src="../assets/images/red-tshirt.png" alt=""> <span>Ionel Fotbal</span></li>
-                    </ul> -->
+                <div 
+                    class="app-live-match__stats-bar-element" 
+                    :class="{'app-live-match__stats-bar-element--active':activeSection==2}"
+                    @click="changeSection(2)"
+                >
+                    <span>Clasament</span>
+                </div >
+                <div 
+                    class="app-live-match__stats-bar-element" 
+                    :class="{'app-live-match__stats-bar-element--active':activeSection==3}"
+                    @click="changeSection(3)"
+                >
+                    <span>Statistici</span>
                 </div>
             </div>
         </div>
     </div>
 </template>
 
+<script>
+export default {
+    data() {
+        return {
+            activeSection:0
+        }
+    },
+    methods:{
+        changeSection(id) {
+            this.activeSection = id;
+        }
+    }
+}
+</script>
+
 
 <style lang="scss" scoped>
 .app-live-match {
-    background-image: linear-gradient(rgb(0, 0, 0), rgba(2, 2, 2, 0.397)),url("../assets/images/live-match.jpg");
-    background-position: bottom;
-    background-size: 100%;
-    width:100%;
-    min-height:200px; 
-    padding: 2rem;
-    box-sizing: border-box;
+    display: block;
+
+    &__general {
+        background-image: linear-gradient(rgb(0, 0, 0), rgba(2, 2, 2, 0.397)),url("../assets/images/live-match.jpg");
+        background-position: bottom;
+        background-size: 100%;
+        width:100%;
+        min-height:200px; 
+        padding: 2rem;
+        box-sizing: border-box;
+    }
 
     &__top {
         color: white;
@@ -160,6 +213,49 @@
                     img {
                         width: 25px;
                     }
+                }
+            }
+        }
+    }
+
+    &__stats {
+        width: 800px;
+        max-width: 800px;
+        margin: 0 auto;
+
+        &-bar {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+
+            &-element {
+                width: 25%;
+                text-align: center;
+                font-family: $font-medium;
+                padding: 1.3rem 0;
+                border-bottom: 1px solid rgb(167, 167, 167);
+                color: rgb(167, 167, 167);
+                cursor: pointer;
+                // transition: all .5s;
+
+                &--active {
+                    border-bottom: 2px solid blue;;
+                    color: blue;
+                    font-family: $font-semibold;
+                    transition: 0;
+
+                    &:hover {
+                        border-bottom: 2px solid blue!important;;
+                        color: blue!important;
+                        font-family: $font-semibold;
+                        transition: 0; 
+                    }
+                }
+
+                &:hover {
+                    border-bottom: 1px solid rgb(87, 87, 255);;
+                    color: rgb(128, 128, 255);
+                    font-family: $font-semibold;
                 }
             }
         }

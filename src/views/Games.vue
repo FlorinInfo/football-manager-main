@@ -10,6 +10,11 @@
 
 <script>
 export default {
+    data(){
+        return {
+            loading:null
+        }
+    },
     methods:{
         registerToGame(id) {
             let data = {
@@ -43,10 +48,19 @@ export default {
             })
         }
     },
+    computed:{
+        gamesL() {
+            return this.$store.state.games.length;
+        }
+    },
     beforeMount(){
+        this.loading = this.$vs.loading()
         this.$store.dispatch("getGames", this.$route.params.stadium_id);
     },
     watch:{
+        'gamesL':function() {
+            if(this.gamesL!=0) this.loading.close()
+        },
         '$route.params.stadium_id':function() {
             this.$store.dispatch("getGames", this.$route.params.stadium_id);
         }

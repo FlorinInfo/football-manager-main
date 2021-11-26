@@ -35,7 +35,6 @@
         </div>
       </md-card-content>
       <md-card-actions >
-        
         <md-button class="md-primary">
           <div v-if="!edit">
             <span v-if="game.players==game.max_players">In proces</span>
