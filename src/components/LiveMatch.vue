@@ -66,15 +66,130 @@
                     :class="{'app-live-match__stats-bar-element--active':activeSection==3}"
                     @click="changeSection(3)"
                 >
-                    <span>Statistici</span>
+                    <span>Jucatori</span>
                 </div>
+            </div>
+            <div class="app-live-match__stats-content">
+                <Stadium v-if="activeSection==0" style="margin-top:1rem;"/>
+                <div v-if="activeSection==1" style="margin-top:.5rem;">
+                    <AppMatch v-for="z in 6" :key="z" style="margin-top:1rem;"/>
+                </div>
+                <vs-table v-if="activeSection==2">
+                    <template #thead>
+                    <vs-tr>
+                        <vs-th>
+                        Echipa
+                        </vs-th>
+                        <vs-th>
+                        MJ
+                        </vs-th>
+                        <vs-th>
+                        V
+                        </vs-th>
+                        <vs-th>
+                        E
+                        </vs-th>
+                        <vs-th>
+                        I
+                        </vs-th>
+                        <vs-th>
+                        GM
+                        </vs-th>
+                        <vs-th>
+                        GP
+                        </vs-th>
+                        <vs-th>
+                        PCT
+                        </vs-th>
+                    </vs-tr>
+                    </template>
+                    <template #tbody>
+                    <vs-tr
+                        style="margin-top:5px;"
+                        :key="i"
+                        v-for="(tr, i) in 5"
+                        :data="tr"
+                    >
+                        <vs-td  
+                        :class="{'final-secondary-border':i==2|| i==3,'final-border':i==1||i==0}">
+                         jAPANEZ
+                        </vs-td>
+                        <vs-td>
+                         12
+                        </vs-td>
+                        <vs-td>
+                         6 
+                        </vs-td>
+                        <vs-td>
+                         6 
+                        </vs-td>
+                        <vs-td>
+                         6 
+                        </vs-td>
+                        <vs-td>
+                         12
+                        </vs-td>
+                        <vs-td>
+                         23
+                        </vs-td>
+                        <vs-td>
+                         12
+                        </vs-td>
+                    </vs-tr>
+                    </template>
+                </vs-table>
+                <vs-table v-if="activeSection==3" striped>
+                    <template #thead>
+                    <vs-tr>
+                        <vs-th>
+                        Nr.
+                        </vs-th>
+                        <vs-th>
+                        Jucatori
+                        </vs-th>
+                        <vs-th>
+                        Echipa
+                        </vs-th>
+                        <vs-th>
+                        Goluri
+                        </vs-th>
+                    </vs-tr>
+                    </template>
+                    <template #tbody>
+                    <vs-tr
+                        style="margin-top:5px;"
+                        :key="i"
+                        v-for="(tr, i) in 25"
+                        :data="tr"
+                    >
+                        <vs-td  >
+                         {{i}}.
+                        </vs-td>
+                        <vs-td>
+                         Florin Bucataru
+                        </vs-td>
+                        <vs-td>
+                         Echipa Rosie
+                        </vs-td>
+                        <vs-td>
+                         <i class='bx bx-football' v-for="x in i" :key="x"></i>
+                        </vs-td>
+                    </vs-tr>
+                    </template>
+                </vs-table>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import AppMatch from "../components/AppMatch.vue";
+import Stadium from "../components/Stadium.vue"
 export default {
+    components:{
+        AppMatch,
+        Stadium
+    },
     data() {
         return {
             activeSection:0
@@ -260,5 +375,13 @@ export default {
             }
         }
     }
+}
+
+.final-border {
+    border-left: 6px solid blue!important;
+}
+
+.final-secondary-border {
+    border-left: 6px solid orangered!important;
 }
 </style>
