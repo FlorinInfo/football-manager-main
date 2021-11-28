@@ -42,7 +42,7 @@
             </div>
         </div>
         <div v-else class="app-homepage-logged"> 
-            <LiveMatch/>
+            <LiveMatch :live="live"/>
         </div>
     </div>
 </template>
@@ -58,7 +58,8 @@
         login:{
             email:"",
             password:"",
-        }
+        },
+        live:null
       }),
       methods:{
           loginUser(){
@@ -73,6 +74,21 @@
           errors_Auth(){
               return this.$store.getters.errors_Auth
           }
+      },
+      beforeMount(){
+        const loading = this.$vs.loading()
+        // alert(localStorage.getItem("game_id"))
+        const credentials = {
+            user_id:this.$store.state.user_id,
+            token:this.$store.state.token,
+            game_id:localStorage.getItem("game_id")
+        }
+       this.axios.get('/get-live', { params:credentials }).then((response) => {
+        response = response.data;
+        this.live = response.data;
+        loading.close()
+        console.log(response)   
+        })
       },
       mounted() {
           this.active = true;

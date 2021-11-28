@@ -75,7 +75,7 @@
          {{ tr.player_id.stats.goals }}
         </vs-td>
         <vs-td>
-          <vs-select v-if="$store.state.user_id==game.org_id&&$store.state.add_game.teams.length" placeholder="Select" @input="addTeamPlayer(tr._id, tr.team.team_id)" v-model="tr.team.team_id" :key="$store.state.add_game.teams.length">
+          <vs-select v-if="$store.state.user_id==game.org_id&&$store.state.add_game.teams.length" placeholder="Select" @input="addTeamPlayer(tr.player_id, tr.team.team_id)" v-model="tr.team.team_id" :key="$store.state.add_game.teams.length">
             <vs-option :label="t.name" :value="t._id" v-for="(t) in $store.state.add_game.teams" :key="t._id">
               {{t.name}} 
             </vs-option>

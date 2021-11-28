@@ -211,9 +211,10 @@ export default {
             this.axios.post("/add-game", data).then((response)=>{
                 response = response.data;
                 console.log(response)
+                localStorage.setItem("game_id", response.gameSave._id);
                 this.$store.commit("SET_AUTH", response.logged);
                 if(response.status==true) {
-                    this.$store.dispatch('getAddGame', localStorage.getItem("game_id"));
+                    this.$store.dispatch('getAddGame', null);
                     this.game.name = "";
                     this.game.price = "";
                     this.game.time.start = "";
@@ -241,7 +242,7 @@ export default {
     },
     beforeMount(){
         const loading = this.$vs.loading()
-        this.$store.dispatch('getAddGame', localStorage.getItem("game_id"));
+        this.$store.dispatch('getAddGame', "");
         const credentials = {
             user_id:this.$store.state.user_id,
             token:this.$store.state.token,

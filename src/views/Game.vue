@@ -30,6 +30,8 @@ export default {
                     title: 'Super, super! 😎',
                     text: 'Te-ai inscris cu succes la campionat.Bafta bossulica! '
                 })
+                alert(1)
+                localStorage.setItem("game_id",id);  
                 this.loadPage();
             }
             else {

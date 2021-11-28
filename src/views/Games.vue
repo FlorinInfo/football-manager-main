@@ -34,6 +34,7 @@ export default {
                     title: 'Super, super! 😎',
                     text: 'Te-ai inscris cu succes la campionat.Bafta bossulica! '
                 })
+                localStorage.setItem("game_id",id);
                 this.$store.dispatch("getGames", this.$route.params.stadium_id);
             }
             else {

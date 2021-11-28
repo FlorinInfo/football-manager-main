@@ -1,9 +1,9 @@
 <template>
-    <div class="app-live-match">
+    <div class="app-live-match" v-if="live">
         <div class="app-live-match__general">
             <div class="app-live-match__top">
-                <span>Campionatul lui Georgel &nbsp; <i class='bx bxs-trophy'></i></span>
-                <span><i class='bx bxs-map-pin' ></i> &nbsp; Stadion Olymp</span>
+                <span>{{live.top.game.name}} &nbsp; <i class='bx bxs-trophy'></i></span>
+                <span><i class='bx bxs-map-pin' ></i> &nbsp; {{live.top.stadium.name}}</span>
             </div>
             <div class="app-live-match__center">
                 <div class="app-live-match__center-templates">
@@ -72,6 +72,17 @@
             <div class="app-live-match__stats-content">
                 <Stadium v-if="activeSection==0" style="margin-top:1rem;"/>
                 <div v-if="activeSection==1" style="margin-top:.5rem;">
+                    <vs-button
+                    gradient
+                    style="min-width: 100px;margin-left:auto;"
+                    
+                    animation-type="scale"
+                    >
+                    <i class='bx bxs-add-to-queue'></i>
+                    <template #animate >
+                    Adauga meci
+                    </template>
+                </vs-button>
                     <AppMatch v-for="z in 6" :key="z" style="margin-top:1rem;"/>
                 </div>
                 <vs-table v-if="activeSection==2">
@@ -159,17 +170,17 @@
                     <vs-tr
                         style="margin-top:5px;"
                         :key="i"
-                        v-for="(tr, i) in 25"
+                        v-for="(tr, i) in live.players"
                         :data="tr"
                     >
                         <vs-td  >
                          {{i}}.
                         </vs-td>
                         <vs-td>
-                         Florin Bucataru
+                         {{tr.player_id.first_name}} {{tr.player_id.second_name}}
                         </vs-td>
                         <vs-td>
-                         Echipa Rosie
+                         {{tr.team_id.name}}
                         </vs-td>
                         <vs-td>
                          <i class='bx bx-football' v-for="x in i" :key="x"></i>
@@ -189,6 +200,12 @@ export default {
     components:{
         AppMatch,
         Stadium
+    },
+    props:{
+        live:{
+            type:Object,
+            default:()=>{}
+        }
     },
     data() {
         return {
