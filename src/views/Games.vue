@@ -59,8 +59,8 @@ export default {
         this.$store.dispatch("getGames", this.$route.params.stadium_id);
     },
     watch:{
-        'gamesL':function() {
-            if(this.gamesL!=0) this.loading.close()
+        '$store.state.loading':function() {
+            if(this.$store.state.loading==false) this.loading.close()
         },
         '$route.params.stadium_id':function() {
             this.$store.dispatch("getGames", this.$route.params.stadium_id);

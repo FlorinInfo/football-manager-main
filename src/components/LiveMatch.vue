@@ -118,33 +118,34 @@
                     <vs-tr
                         style="margin-top:5px;"
                         :key="i"
-                        v-for="(tr, i) in 5"
+                        v-for="(tr, i) in live.teams.filter((t)=>{t!=null})"
                         :data="tr"
                     >
-                        <vs-td  
+                        <vs-td 
+                        
                         :class="{'final-secondary-border':i==2|| i==3,'final-border':i==1||i==0}">
-                         jAPANEZ
+                         {{tr.team_id.name}}
                         </vs-td>
                         <vs-td>
-                         12
+                         {{tr.team_id.stats.matches}}
                         </vs-td>
                         <vs-td>
-                         6 
+                         {{tr.team_id.stats.wins}} 
                         </vs-td>
                         <vs-td>
-                         6 
+                         {{tr.team_id.stats.eq}}
                         </vs-td>
                         <vs-td>
-                         6 
+                         {{tr.team_id.stats.loses}}
                         </vs-td>
                         <vs-td>
-                         12
+                         {{tr.team_id.stats.gm}}
                         </vs-td>
                         <vs-td>
-                         23
+                         {{tr.team_id.stats.gp}}
                         </vs-td>
                         <vs-td>
-                         12
+                         {{tr.team_id.stats.wins*3 + tr.team_id.stats.eq * 1}}
                         </vs-td>
                     </vs-tr>
                     </template>
@@ -179,8 +180,8 @@
                         <vs-td>
                          {{tr.player_id.first_name}} {{tr.player_id.second_name}}
                         </vs-td>
-                        <vs-td>
-                         {{tr.team_id.name}}
+                        <vs-td> 
+                         <span v-if="tr.team_id">{{tr.team_id.name}}</span>
                         </vs-td>
                         <vs-td>
                          <i class='bx bx-football' v-for="x in i" :key="x"></i>
@@ -188,6 +189,7 @@
                     </vs-tr>
                     </template>
                 </vs-table>
+                {{live}}
             </div>
         </div>
     </div>

@@ -1,9 +1,14 @@
 <template>
     <div class="app-game" v-if="game">
+      head
       <md-card class="md-card-example" style="max-width:100%;margin-top:20px;" >
       <md-card-area md-inset>
         <md-card-media >
-          <div class="app-game__background" @click="goLink"></div>
+          <div 
+            class="app-game__background" 
+            @click="goLink"
+            :style="{backgroundImage:'url(' + require('../assets/images/games/' + getImgUrl()) + ')'}">
+          </div>
         </md-card-media>
         <md-card-header>
           <h2 class="md-title" @click="goLink">{{game.name}}</h2>
@@ -75,12 +80,12 @@
          {{ tr.player_id.stats.goals }}
         </vs-td>
         <vs-td>
-          <vs-select v-if="$store.state.user_id==game.org_id&&$store.state.add_game.teams.length" placeholder="Select" @input="addTeamPlayer(tr.player_id, tr.team.team_id)" v-model="tr.team.team_id" :key="$store.state.add_game.teams.length">
+          <vs-select v-if="$store.state.user_id==game.org_id&&$store.state.add_game.teams.length" placeholder="Select" @input="addTeamPlayer(tr.player_id, tr.team_id)" v-model="tr.team_id" :key="$store.state.add_game.teams.length">
             <vs-option :label="t.name" :value="t._id" v-for="(t) in $store.state.add_game.teams" :key="t._id">
               {{t.name}} 
             </vs-option>
           </vs-select>
-          <span v-else-if="tr.team">{{tr.team.team_id.name}} </span>
+          <!-- <span v-else-if="tr.team">{{tr.team.team_id.name}} </span> -->
         </vs-td>
       </vs-tr>
     </template>
@@ -118,6 +123,10 @@ export default {
       }
     },
     methods:{
+      getImgUrl () {
+        let pic = Math.floor(Math.random() * (3 - 1 + 1) + 1)
+        return pic + '.jpg';
+      },
       goLink(){
         this.$router.push("/campionat/" + this.game._id);
       },
@@ -166,7 +175,7 @@ export default {
         let data = {
             game_id:this.game._id,
             team_id:team,
-            player_id:id,
+            player_id:id._id,
             token:this.$store.state.token,
             user_id:this.$store.state.user_id
         }

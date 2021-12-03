@@ -33,7 +33,8 @@ export default new Vuex.Store({
     },
     games:[],
     loader:false,
-    d_team:false
+    d_team:false,
+    loading:false
   },
   mutations: {
     SET_ERRORS_AUTH(state,errors) {
@@ -69,6 +70,9 @@ export default new Vuex.Store({
         localStorage.setItem("logged", auth);
         window.location = "/";
       }
+    },
+    SET_LOADING(state, loading) {
+      state.loading = loading;
     }
   },
   actions: {
@@ -126,6 +130,7 @@ export default new Vuex.Store({
       })
     },
     getGames({commit, state},stadium_id) {
+      commit("SET_LOADING", true);
       const data = {
         user_id:state.user_id,
         token:state.token,
@@ -136,6 +141,7 @@ export default new Vuex.Store({
         console.log(response)
         commit("SET_AUTH",response.logged); 
         commit("SET_GAMES",response.games.reverse());
+        commit("SET_LOADING", false)
       })
     },
   },

@@ -1,5 +1,9 @@
 <template>
-    <div class="app-city-card" @click="$emit('goLink',stadium._id)">
+    <div class="app-city-card" 
+        @click="$emit('goLink',stadium._id)"
+        :style="{backgroundImage:'linear-gradient(to right bottom, rgba(0, 0, 0, 0.8), rgba(255, 255, 255, 0)),url(' + require('../assets/images/stadiums/' + getImgUrl()) + ')'}"
+    >
+    <img :src="getImgUrl" alt=""> 
         <span class="app-city-card__location">
             {{stadium.location}}
         </span>
@@ -15,7 +19,13 @@ export default {
             type:Object,
             default:()=>{}
         }
-    }
+    },
+    methods:{
+        getImgUrl () {
+            let pic = Math.floor(Math.random() * (4 - 1 + 1) + 1)
+            return pic + '.jpg';
+		},
+    },
 }
 </script>
 
@@ -23,7 +33,7 @@ export default {
 .app-city-card {
     width: 95vw;
     height: 25vh;
-    background-image: linear-gradient(to right bottom, rgba(0, 0, 0, 0.8), rgba(255, 255, 255, 0)),url("../assets/images/didi.jpg");
+    // background-image: linear-gradient(to right bottom, rgba(0, 0, 0, 0.8), rgba(255, 255, 255, 0)),url("../assets/images/stadiums/4.jpg");
     background-position: center;
     background-size: cover;
     max-width: 100vw;
