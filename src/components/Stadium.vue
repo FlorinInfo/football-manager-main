@@ -3,54 +3,81 @@
         <img src="../assets/images/field.jpg" class="app-stadium__field" alt="">
         <div class="app-stadium__player app-stadium__player-1">
             <img src="../assets/images/red-tshirt.png" alt="">
-            <span>Mocanel</span>
+            <span v-if="team1[0]">{{team1[0].player_id.first_name}}</span>
+            <span v-else>???</span>
         </div>
         <div class="app-stadium__player app-stadium__player-2">
             <img src="../assets/images/red-tshirt.png" alt="">
-            <span>Mocanel</span>
+            <span v-if="team1[1]">{{team1[1].player_id.first_name}}</span>
+            <span v-else>???</span>
         </div>
         <div class="app-stadium__player app-stadium__player-3">
             <img src="../assets/images/red-tshirt.png" alt="">
-            <span>Mocanel</span>
+            <span v-if="team1[2]">{{team1[2].player_id.first_name}}</span>
+            <span v-else>???</span>
         </div>
         <div class="app-stadium__player app-stadium__player-4">
             <img src="../assets/images/red-tshirt.png" alt="">
-            <span>Mocanel</span>
+            <span v-if="team1[3]">{{team1[3].player_id.first_name}}</span>
+            <span v-else>???</span>
         </div>
         <div class="app-stadium__player app-stadium__player-5">
             <img src="../assets/images/red-tshirt.png" alt="">
-            <span>Mocanel</span>
+            <span v-if="team1[4]">{{team1[4].player_id.first_name}}</span>
+            <span v-else>???</span>
         </div>
         <div class="app-stadium__player app-stadium__player-6">
             <img src="../assets/images/red-tshirt.png" alt="">
-            <span>Mocanel</span>
+            <span v-if="team1[5]">{{team1[5].player_id.first_name}}</span>
+            <span v-else>???</span>
         </div>
         <div class="app-stadium__player app-stadium__player-7">
             <img src="../assets/images/blue-tshirt.png" alt="">
-            <span>Mocanel</span>
+            <span v-if="team2[0]">{{team2[0].player_id.first_name}}</span>
+            <span v-else>???</span>
         </div>
         <div class="app-stadium__player app-stadium__player-8">
             <img src="../assets/images/blue-tshirt.png" alt="">
-            <span>Mocanel</span>
+            <span v-if="team2[1]">{{team2[1].player_id.first_name}}</span>
+            <span v-else>???</span>
         </div>
         <div class="app-stadium__player app-stadium__player-9">
             <img src="../assets/images/blue-tshirt.png" alt="">
-            <span>Mocanel</span>
+            <span v-if="team2[2]">{{team2[2].player_id.first_name}}</span>
+            <span v-else>???</span>
         </div>
         <div class="app-stadium__player app-stadium__player-10">
             <img src="../assets/images/blue-tshirt.png" alt="">
-            <span>Mocanel</span>
+            <span v-if="team2[3]">{{team2[3].player_id.first_name}}</span>
+            <span v-else>???</span>
         </div>
         <div class="app-stadium__player app-stadium__player-11">
             <img src="../assets/images/blue-tshirt.png" alt="">
-            <span>Mocanel</span>
+            <span v-if="team2[4]">{{team2[4].player_id.first_name}}</span>
+            <span v-else>???</span>
         </div>
         <div class="app-stadium__player app-stadium__player-12">
             <img src="../assets/images/blue-tshirt.png" alt="">
-            <span>Mocanel</span>
+            <span v-if="team2[5]">{{team2[5].player_id.first_name}}</span>
+            <span v-else>???</span>
         </div> 
     </div>
 </template>
+
+<script>
+export default {
+    props:{
+        team1:{
+            type:Array,
+            default:()=>{return []}
+        },
+        team2:{
+            type:Array,
+            default:()=>{return []}
+        }
+    }
+}
+</script>
 
 
 <style lang="scss" scoped>

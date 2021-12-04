@@ -3,17 +3,32 @@
         <div class="app-match-live"></div>
         <div class="app-match__team">
             <img src="../assets/images/club.png" alt="club">
-            <span>Echipa rosie</span>
+            <span>Echipa {{team1}}</span>
         </div>
         <div class="app-match__score">
             <span>vs</span>
         </div>
         <div class="app-match__team">
-            <span >Echipa rosie</span>
+            <span >Echipa {{team2}}</span>
             <img src="../assets/images/club.png" alt="club">
         </div>
     </div>
 </template>
+
+<script>
+export default {
+    props:{
+        team1:{
+            type:String,
+            default:""
+        },
+        team2:{
+            type:String,
+            default:""
+        }
+    }
+}
+</script>
 
 <style lang="scss" scoped>
 .app-match {

@@ -131,7 +131,7 @@
           }
       },
       beforeMount(){
-        this.axios.get('/sidebar',).then((response) => {
+        this.axios.get('/sidebar').then((response) => {
           response = response.data; 
           this.sidebar.stadiums = [...response.stadiums]; 
           console.log(response)

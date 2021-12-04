@@ -1,6 +1,5 @@
 <template>
     <div class="app-game" v-if="game">
-      head
       <md-card class="md-card-example" style="max-width:100%;margin-top:20px;" >
       <md-card-area md-inset>
         <md-card-media >

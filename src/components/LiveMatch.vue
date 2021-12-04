@@ -1,5 +1,6 @@
 <template>
     <div class="app-live-match" v-if="live">
+        {{live.top.game.live}} 
         <div class="app-live-match__general">
             <div class="app-live-match__top">
                 <span>{{live.top.game.name}} &nbsp; <i class='bx bxs-trophy'></i></span>
@@ -9,8 +10,11 @@
                 <div class="app-live-match__center-templates">
                     <div class="app-live-match__center-template">
                         <img src="../assets/images/club.png" alt="">
-                        <div class="app-live-match__center-template-name">
-                        Japanez
+                        <div class="app-live-match__center-template-name" v-if="live.top.game.live">
+                            {{live.top.game.live.team1.name}}
+                        </div>
+                        <div class="app-live-match__center-template-name" v-else>
+                           ???
                         </div>
                         <!-- <ul>
                             <li><img src="../assets/images/red-tshirt.png" alt=""> <span>Ionel Fotbal</span></li>
@@ -20,14 +24,17 @@
                     </div>
                     <div class="app-live-match__center-templates-center">
                         <div class="app-live-match__center-templates-center-score">0 - 0</div>
-                        <span class="app-live-match__center-templates-center-status"><i class='bx bx-play' ></i> &nbsp;Pauza</span>
+                        <span class="app-live-match__center-templates-center-status"><i class='bx bx-play' ></i> &nbsp;Finalizeaza</span>
                         <!-- <span class="app-live-match__center-templates-center-status"><i class='bx bx-play' ></i> &nbsp;10:00</span> -->
                         <!-- <span class="app-live-match__center-templates-center-timer">09:35</span> -->
                     </div>
                     <div class="app-live-match__center-template">
                         <img src="../assets/images/club.png" alt="">
-                        <div class="app-live-match__center-template-name">
-                        Japanez II
+                        <div class="app-live-match__center-template-name" v-if="live.top.game.live">
+                            {{live.top.game.live.team2.name}}
+                        </div>
+                        <div class="app-live-match__center-template-name" v-else>
+                            ???
                         </div>
                         <!-- <ul>
                             <li><img src="../assets/images/red-tshirt.png" alt=""> <span>Ionel Fotbal</span></li>
@@ -70,12 +77,13 @@
                 </div>
             </div>
             <div class="app-live-match__stats-content">
-                <Stadium v-if="activeSection==0" style="margin-top:1rem;"/>
+                <Stadium v-if="activeSection==0&&live.team1&&live.team2" :team1="live.team1" :team2="live.team2" style="margin-top:1rem;"/>
                 <div v-if="activeSection==1" style="margin-top:.5rem;">
                     <vs-button
+                    v-if="live.teams.length"
                     gradient
                     style="min-width: 100px;margin-left:auto;"
-                    
+                    @click="matchDialog=true"
                     animation-type="scale"
                     >
                     <i class='bx bxs-add-to-queue'></i>
@@ -83,7 +91,12 @@
                     Adauga meci
                     </template>
                 </vs-button>
-                    <AppMatch v-for="z in 6" :key="z" style="margin-top:1rem;"/>
+                    <AppMatch 
+                        v-for="m in live.matches" 
+                        :team1="m.team1.name" 
+                        :team2="m.team2.name"
+                        :key="m.id" 
+                        style="margin-top:1rem;"/>
                 </div>
                 <vs-table v-if="activeSection==2">
                     <template #thead>
@@ -118,34 +131,34 @@
                     <vs-tr
                         style="margin-top:5px;"
                         :key="i"
-                        v-for="(tr, i) in live.teams.filter((t)=>{t!=null})"
+                        v-for="(tr, i) in live.teams"
                         :data="tr"
                     >
                         <vs-td 
                         
                         :class="{'final-secondary-border':i==2|| i==3,'final-border':i==1||i==0}">
-                         {{tr.team_id.name}}
+                         {{tr.name}}
                         </vs-td>
                         <vs-td>
-                         {{tr.team_id.stats.matches}}
+                         {{tr.stats.matches}}
                         </vs-td>
                         <vs-td>
-                         {{tr.team_id.stats.wins}} 
+                         {{tr.stats.wins}} 
                         </vs-td>
                         <vs-td>
-                         {{tr.team_id.stats.eq}}
+                         {{tr.stats.eq}}
                         </vs-td>
                         <vs-td>
-                         {{tr.team_id.stats.loses}}
+                         {{tr.stats.loses}}
                         </vs-td>
                         <vs-td>
-                         {{tr.team_id.stats.gm}}
+                         {{tr.stats.gm}}
                         </vs-td>
                         <vs-td>
-                         {{tr.team_id.stats.gp}}
+                         {{tr.stats.gp}}
                         </vs-td>
                         <vs-td>
-                         {{tr.team_id.stats.wins*3 + tr.team_id.stats.eq * 1}}
+                         {{tr.stats.wins*3 + tr.stats.eq * 1}}
                         </vs-td>
                     </vs-tr>
                     </template>
@@ -189,9 +202,69 @@
                     </vs-tr>
                     </template>
                 </vs-table>
-                {{live}}
             </div>
         </div>
+        <vs-dialog overflow-hidden :loading="loadMatches" v-model="matchDialog">
+            <template #header>
+            <h4 class="not-margin">
+                Adauga <b>meciuri</b>
+            </h4>
+            </template>
+            <div class="add-match__template" v-for="(t, index) in templateAdd" :key="index">
+                <div class="add-match__template-top">
+                    <span class="add-match__template-title">
+                        Meci {{index + 1}} 
+                        <span v-if="t.match_type==3">(simplu)</span>
+                        <span v-if="t.match_type==2">(finala mica)</span>
+                        <span v-if="t.match_type==1">(finala mare)</span>
+                    </span>
+                    <i class='bx bx-sort-alt-2' @click="changeMatchType(index)"></i>
+                    <!-- <i  v-if="t.team1&&t.team2"
+                        class='bx bx-trash add-match__template-delete' 
+                        @click="removeMatch(index)"
+                    >
+                    </i> -->
+                    <!-- <div class="add-match__template-type"> -->
+                        <!-- <vs-checkbox val="1" v-model="option">
+                            Finala mare
+                        </vs-checkbox>
+                        <vs-checkbox val="2" v-model="option">
+                            Finala mica
+                        </vs-checkbox> -->
+                    <!-- </div> -->
+                </div>
+                        <div class="add-match__template-teams">
+                        <div>
+                            <vs-select
+                                filter
+                                placeholder="Echipa 1"
+                                v-model="t.team1"
+                                :key="live.teams.length"
+                            >
+                                <vs-option :label="t.name" :value="t._id" v-for="(t) in live.teams" :key="t._id">
+                                {{t.name}}
+                                </vs-option>
+                            </vs-select>  
+                        </div>
+                        <div > 
+                            <vs-select
+                                    style="margin-left:auto;"
+                                    filter
+                                    placeholder="Echipa 2"
+                                    v-model="t.team2"
+                                    :key="live.teams.length"
+                                >
+                                <vs-option :label="t.name" :value="t._id" v-for="(t) in live.teams" :key="t._id">
+                                    {{t.name}}
+                                </vs-option>
+                            </vs-select>  
+                        </div>
+                    </div>
+            </div>
+            <vs-button style="margin:1rem auto 0 auto;" @click="addMatches">
+                Adauga
+            </vs-button>
+        </vs-dialog>
     </div>
 </template>
 
@@ -211,12 +284,82 @@ export default {
     },
     data() {
         return {
-            activeSection:0
+            activeSection:0,
+            matchDialog:false,
+            option:1,
+            value:"",
+            loadMatches:false,
+            templateAdd:[
+                {
+                    team1:"",
+                    team2:"",
+                    match_type:3
+                }
+            ]
+        }
+    },
+    computed: {
+        team1() {
+            return this.templateAdd.map(match => match.team1)
+        },
+        team2() {
+            return this.templateAdd.map(match => match.team2)
         }
     },
     methods:{
         changeSection(id) {
             this.activeSection = id;
+        },
+        removeMatch(index) {
+            alert(index)
+            let arr = [...this.templateAdd];
+            arr.splice(index,1);
+            this.templateAdd = [...arr];
+            console.log(this.templateAdd);
+            this.matchDialog = true;
+            console.log(this.matchDialog)
+        },
+        changeMatchType(index) {
+            if(this.templateAdd[index].match_type===1)  {this.templateAdd[index].match_type=2; return 0;}
+            if(this.templateAdd[index].match_type==2)   {this.templateAdd[index].match_type=3; return 0;}
+            if(this.templateAdd[index].match_type==3)   {this.templateAdd[index].match_type=1; return 0;}
+        },
+        addMatches() {
+            this.loadMatches = true;
+            let data = {
+                matches:[...this.templateAdd.slice(0, -1)],
+                stadium_id :this.live.top.stadium.id,
+                game_id : this.live.top.game.id
+            }
+            console.log(data);
+            this.axios.post('/add-match',data).then((response) => {
+                this.loadMatches = this.matchDialog = false;
+                console.log(response)
+            })
+        }
+    },
+    watch:{
+        team1() {
+            if( this.templateAdd[this.templateAdd.length-1].team1&&
+                this.templateAdd[this.templateAdd.length-1].team2
+            ){
+                this.templateAdd.push({
+                    team1:"",
+                    team2:"",
+                    match_type:3
+                })
+            }
+        },
+        team2() {
+            if( this.templateAdd[this.templateAdd.length-1].team1&&
+                this.templateAdd[this.templateAdd.length-1].team2
+            ){
+                this.templateAdd.push({
+                    team1:"",
+                    team2:"",
+                    match_type:3
+                })
+            }
         }
     }
 }
@@ -402,5 +545,41 @@ export default {
 
 .final-secondary-border {
     border-left: 6px solid orangered!important;
+}
+
+.add-match__template {
+    display: block; 
+    margin-top: 1.5rem;
+    border-bottom: 1px solid rgb(200, 200, 200);
+    padding-bottom: 10px;
+
+
+    &-title {
+        font-family: $font-medium;
+
+    }
+
+    &-delete {
+        display: block;
+        color: red;
+        cursor: pointer;
+        transform: translateY(10px);
+    }
+
+    &-top {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    &-teams {
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        margin-top: .4rem;
+
+        div {
+            width: 80%;
+        }
+    }
 }
 </style>

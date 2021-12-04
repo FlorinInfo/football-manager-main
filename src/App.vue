@@ -57,4 +57,8 @@ html {
 #undefined-input {
   padding-top:0!important;
 }
+
+.vs-dialog {
+  padding: 2rem 1rem;
+}
 </style>

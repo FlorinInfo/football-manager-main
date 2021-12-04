@@ -3,7 +3,7 @@
         <div class="app-homepage-unlogged" v-if="$store.getters.logged_User!=='true'">
             <div class="app-homepage-unlogged__main">
                 <div class="center" style="width:100%;">
-                <vs-dialog overflow-hidden full-screen prevent-close not-close v-model="active">
+                <vs-dialog overflow-hidden prevent-close not-close v-model="active">
                     <template #header>
                     <h4 class="not-margin app-homepage-unlogged__main-title">
                         Bine ai venit 
@@ -84,10 +84,11 @@
             game_id:localStorage.getItem("game_id")
         }
        this.axios.get('/get-live', { params:credentials }).then((response) => {
-        response = response.data;
-        this.live = response.data;
-        loading.close()
-        console.log(response)   
+            response = response.data;
+            this.live = response.data;
+            this.$store.commit("SET_AUTH",response.logged); 
+            loading.close()
+            console.log(response)   
         })
       },
       mounted() {
