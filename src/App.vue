@@ -17,10 +17,19 @@
 <script>
 import AppSiderbar from "./components/AppSidebar.vue"
 export default {
+  data(){
+    return {
+      loading:null
+    }
+  },
   components:{
     AppSiderbar
   },
-
+  watch:{
+    '$store.state.loading':function() {
+        if(this.$store.state.loading==false) this.loading.close();else this.loading = this.$vs.loading()
+    },
+  }
 }
 </script>
 

@@ -88,7 +88,7 @@
             this.live = response.data;
             this.$store.commit("SET_AUTH",response.logged); 
             loading.close()
-            console.log(response)   
+            console.log("xxx",response)   
         })
       },
       mounted() {

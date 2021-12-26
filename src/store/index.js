@@ -91,6 +91,7 @@ export default new Vuex.Store({
       })
     },
     getStadiums({commit, state}) {
+      commit("SET_LOADING", true);
       const credentials = {
         user_id:state.user_id,
         token:state.token
@@ -100,6 +101,7 @@ export default new Vuex.Store({
         console.log(response)
         commit("SET_AUTH",response.logged);
         commit("SET_STADIUMS",response);
+        commit("SET_LOADING", false); 
       })
     },
     getAddGame({commit, state}, game_id){

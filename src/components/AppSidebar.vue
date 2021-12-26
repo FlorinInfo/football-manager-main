@@ -65,12 +65,12 @@
             </template>
             Echipe
           </vs-sidebar-item>
-          <vs-sidebar-item id="discord" to='/statistici/campionate'>
+          <!-- <vs-sidebar-item id="discord" to='/statistici/campionate'>
             <template #icon>
               <i class='bx bx-football' ></i>
             </template>
             Campionate
-          </vs-sidebar-item>
+          </vs-sidebar-item> -->
         </vs-sidebar-group>
         <vs-sidebar-item id="add" to="/creeaza-campionat">
           <template #icon>
@@ -78,12 +78,12 @@
           </template>
           Creeaza campionat
         </vs-sidebar-item>
-        <vs-sidebar-item id="donate">
+        <!-- <vs-sidebar-item id="donate">
           <template #icon>
             <i class='bx bx-news' ></i>
           </template>
           Actualizari
-        </vs-sidebar-item>
+        </vs-sidebar-item> -->
         <div @click="logout">
             <vs-sidebar-item id="logout" >
             <template #icon>

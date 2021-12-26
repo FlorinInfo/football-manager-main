@@ -1,6 +1,5 @@
 <template>
     <div class="app-live-match" v-if="live">
-        {{live.top.game.live}} 
         <div class="app-live-match__general">
             <div class="app-live-match__top">
                 <span>{{live.top.game.name}} &nbsp; <i class='bx bxs-trophy'></i></span>
@@ -77,7 +76,12 @@
                 </div>
             </div>
             <div class="app-live-match__stats-content">
-                <Stadium v-if="activeSection==0&&live.team1&&live.team2" :team1="live.team1" :team2="live.team2" style="margin-top:1rem;"/>
+                <Stadium 
+                    v-if="activeSection==0&&live.team1&&live.team2" 
+                    :team1="live.team1" 
+                    :team2="live.team2" 
+                    style="margin-top:1rem;"
+                    @openGoalModal="openGoalModal"/>
                 <div v-if="activeSection==1" style="margin-top:.5rem;">
                     <vs-button
                     v-if="live.teams.length"
@@ -91,6 +95,7 @@
                     Adauga meci
                     </template>
                 </vs-button>
+                <span v-else class="no-teams">Nu poti adauga meciuri!(nu au fost adaugate echipele)</span>
                     <AppMatch 
                         v-for="m in live.matches" 
                         :team1="m.team1.name" 
@@ -188,7 +193,7 @@
                         :data="tr"
                     >
                         <vs-td  >
-                         {{i}}.
+                         {{i+1}}.
                         </vs-td>
                         <vs-td>
                          {{tr.player_id.first_name}} {{tr.player_id.second_name}}
@@ -204,6 +209,8 @@
                 </vs-table>
             </div>
         </div>
+
+        <!-- Modals -->
         <vs-dialog overflow-hidden :loading="loadMatches" v-model="matchDialog">
             <template #header>
             <h4 class="not-margin">
@@ -265,6 +272,52 @@
                 Adauga
             </vs-button>
         </vs-dialog>
+
+         <vs-dialog not-close v-model="goal_modal" v-if="goal_modal">
+        <template #header>
+          <h4 class="not-margin">
+            Adauga (sterge) gol / autogol
+          </h4>
+        </template>
+            <MdButton
+            class="goal-dialog-btn md-raised md-primary"
+            style="width:100%" 
+            @click="addGoal(1)"
+                >
+            Adauga gol
+        </MdButton>
+        <MdButton
+        class="goal-dialog-btn md-raised md-primary"
+        style="width:100%"
+        @click="addGoal(2)"
+            >
+        Adauga autogol
+        </MdButton>
+        <MdButton
+            class="goal-dialog-btn md-raised md-accent"
+            style="width:100%"
+            @click="deleteGoal(1)"
+        >
+        Sterge gol
+      </MdButton>
+        <MdButton
+            class="goal-dialog-btn md-raised md-accent"
+            style="width:100%"
+            @click="deleteGoal(2)"
+        >
+        Sterge  autogol
+      </MdButton>
+      stadium_id: {{live.top.stadium.id}}
+      <br> 
+    player_id: {{goal_stats.player_id._id}}   
+      <br> 
+      team_1:{{live.top.game.live.team1._id}}
+      <br>
+    team_2:{{live.top.game.live.team2._id}}
+      <br>  
+      game_id: {{live.top.game.id}}
+        <!-- {{goal_stats}} -->
+      </vs-dialog>
     </div>
 </template>
 
@@ -295,7 +348,9 @@ export default {
                     team2:"",
                     match_type:3
                 }
-            ]
+            ],
+            goal_modal:false,
+            goal_stats:null
         }
     },
     computed: {
@@ -307,6 +362,84 @@ export default {
         }
     },
     methods:{
+        openGoalModal(stats){
+            this.goal_modal = true;
+            this.goal_stats = stats;
+        },
+        addGoal(goal_type){
+        let data = {
+            user_id:this.$store.state.user_id,
+            token:this.$store.state.token,
+            stadium_id:this.live.top.stadium.id,
+            player_id:this.goal_stats.player_id._id,
+            team_1:this.live.top.game.live.team1._id,
+            team_2:this.live.top.game.live.team2._id,
+            game_id:this.live.top.game.id,
+            goal_type
+        }
+        this.axios.post('/add-goal',data).then((response) => { 
+            response = response.data;
+            this.$store.commit("SET_AUTH",response.logged); 
+            if(response.status) {
+                let text = 'Golul';
+                if(goal_type==2) text = 'Autogolul';
+                this.$vs.notification({
+                    progress: 'auto',
+                    color:"success",
+                    position:"top-right",
+                    title: 'Super, super! 😎',
+                    text: text + ' a fost adaugat cu succes'
+                })
+                this.goal_modal = false;
+                this.goal_stats = null;
+
+            }
+        })
+        console.log(data);  
+    //               stadium_id: {{live.top.stadium.id}}
+    //   <br> 
+    // player_id: {{goal_stats.player_id._id}}   
+    //   <br> 
+    //   team_1:{{live.top.game.live.team1._id}}
+    //   <br>
+    // team_2:{{live.top.game.live.team2._id}}
+    //   <br>  
+    //   game_id: {{live.top.game.id}}
+        },
+        deleteGoal(goal_type){
+        let data = {
+            user_id:this.$store.state.user_id,
+            token:this.$store.state.token,
+            stadium_id:this.live.top.stadium.id,
+            player_id:this.goal_stats.player_id._id,
+            team_1:this.live.top.game.live.team1._id,
+            team_2:this.live.top.game.live.team2._id,
+            game_id:this.live.top.game.id,
+            goal_type
+        }
+        console.log(data)
+        this.axios.delete('/delete-goal',{data:data}).then((response) => { 
+            console.log(response);
+            response = response.data;
+            // this.$store.commit("SET_AUTH",response.logged); 
+            if(response.status) {
+                let text = 'Golul';
+                if(goal_type==2) text = 'Autogolul';
+                this.$vs.notification({
+                    progress: 'auto',
+                    color:"success",
+                    position:"top-right",
+                    title: 'Super, super! 😎',
+                    text: text + ' a fost sters cu succes'
+                })
+                this.goal_modal = false;
+                this.goal_stats = null;
+
+            }
+        })
+        console.log(data);  
+        },
+
         changeSection(id) {
             this.activeSection = id;
         },
@@ -334,6 +467,8 @@ export default {
             console.log(data);
             this.axios.post('/add-match',data).then((response) => {
                 this.loadMatches = this.matchDialog = false;
+                // this.live.matches.push(data.matches); 
+                this.live.matches = response.data.succes;
                 console.log(response)
             })
         }
@@ -580,6 +715,21 @@ export default {
         div {
             width: 80%;
         }
+    }
+}
+
+.no-teams {
+    display: block;
+    text-align: center;
+    font-family: $font-light;
+}
+
+.goal-dialog-btn {
+    &:first-child {
+        margin: 0;
+    }
+    &:not(:first-child) {
+        margin-top: .5rem;
     }
 }
 </style>

@@ -55,13 +55,9 @@ export default {
         }
     },
     beforeMount(){
-        this.loading = this.$vs.loading()
         this.$store.dispatch("getGames", this.$route.params.stadium_id);
     },
     watch:{
-        '$store.state.loading':function() {
-            if(this.$store.state.loading==false) this.loading.close()
-        },
         '$route.params.stadium_id':function() {
             this.$store.dispatch("getGames", this.$route.params.stadium_id);
         }
