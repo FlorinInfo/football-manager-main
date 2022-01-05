@@ -1,7 +1,12 @@
 <template>
     <div class="app-homepage">
         <div class="app-homepage-unlogged" v-if="$store.getters.logged_User!=='true'">
-            <div class="app-homepage-unlogged__main">
+        <lottie-player 
+            src="https://assets8.lottiefiles.com/packages/lf20_s0e2CP.json"  
+            background="transparent"  speed="1"  style="width: 300px; height: 300px;margin-left:auto;"  
+            loop autoplay>
+        </lottie-player>            
+        <div class="app-homepage-unlogged__main">
                 <div class="center" style="width:100%;">
                 <vs-dialog overflow-hidden prevent-close not-close v-model="active">
                     <template #header>
@@ -42,24 +47,22 @@
             </div>
         </div>
         <div v-else class="app-homepage-logged"> 
-            <LiveMatch :live="live"/>
+            <div class="app-games__template" v-for="game in myGames" :key="game.game_id._id">
+                <AppGame :game="game.game_id"/>       
+            </div>
         </div>
     </div>
 </template>
 
 <script>
-    import LiveMatch from "../components/LiveMatch.vue";
     export default {
-      components:{
-          LiveMatch
-      },
       data:() => ({
         active: false,
         login:{
             email:"",
             password:"",
         },
-        live:null
+        myGames:[]
       }),
       methods:{
           loginUser(){
@@ -68,6 +71,24 @@
                   password:this.login.password
               }
               this.$store.dispatch('loginUser', credentials);
+          },
+          loadPage(){
+                const loading = this.$vs.loading()
+                // // alert(localStorage.getItem("game_id"))
+                const credentials = {
+                    user_id:this.$store.state.user_id,
+                    token:this.$store.state.token
+                }
+            this.axios.get('/get-my-games', { params:credentials }).then((response) => {
+                    response = response.data;
+                    this.$store.commit("SET_AUTH",response.logged); 
+                    this.myGames = [...response.games]
+                    if(this.myGames.length == 0) {
+                        this.$router.push('/campionate');
+                    }
+                    loading.close()
+                    console.log("xxx",response)   
+            })
           }
       },
       computed:{
@@ -76,20 +97,7 @@
           }
       },
       beforeMount(){
-        const loading = this.$vs.loading()
-        // alert(localStorage.getItem("game_id"))
-        const credentials = {
-            user_id:this.$store.state.user_id,
-            token:this.$store.state.token,
-            game_id:localStorage.getItem("game_id")
-        }
-       this.axios.get('/get-live', { params:credentials }).then((response) => {
-            response = response.data;
-            this.live = response.data;
-            this.$store.commit("SET_AUTH",response.logged); 
-            loading.close()
-            console.log("xxx",response)   
-        })
+          this.loadPage()
       },
       mounted() {
           this.active = true;

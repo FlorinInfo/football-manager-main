@@ -37,7 +37,7 @@ const routes = [
     component:Statistics
   },
   {
-    path:"/campionat/:id",
+    path:"/campionat/:id/:c_type?",
     name:"Campionat",
     component:Game
   }

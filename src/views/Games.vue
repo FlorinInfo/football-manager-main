@@ -1,5 +1,5 @@
 <template>
-    <div class="app-games">
+    <div class="app-games" >
         <h2 class="app-games__title" v-if="$store.state.games.length==0">Din pacate nu sunt meciuri disponibile in acest moment</h2>
         <div v-else class="app-games__template" v-for="game in $store.state.games" :key="game._id">
             <AppGame :game="game" @registerToGame="registerToGame"/>       
@@ -12,7 +12,7 @@
 export default {
     data(){
         return {
-            loading:null
+            loading:true
         }
     },
     methods:{
@@ -26,6 +26,7 @@ export default {
             const loading = this.$vs.loading()
             this.axios.post('/register-to-game',data).then((response) => {
             loading.close()
+            this.loading = false;
                 if(response.data.status){
                 this.$vs.notification({
                     progress: 'auto',

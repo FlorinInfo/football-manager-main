@@ -21,9 +21,17 @@
                             <li><img src="../assets/images/red-tshirt.png" alt=""> <span>Ionel Fotbal</span></li>
                         </ul> -->
                     </div>
-                    <div class="app-live-match__center-templates-center">
-                        <div class="app-live-match__center-templates-center-score">0 - 0</div>
-                        <span class="app-live-match__center-templates-center-status"><i class='bx bx-play' ></i> &nbsp;Finalizeaza</span>
+                    <div class="app-live-match__center-templates-center" v-if="live.top.game.live">
+                        <div class="app-live-match__center-templates-center-score">
+                            {{live.top.game.live.team1.stats.gm}}
+                            - 
+                            {{live.top.game.live.team2.stats.gm}}
+                        </div>
+                        <span 
+                            @click="finishMatch"
+                            class="app-live-match__center-templates-center-status">
+                            <i class='bx bx-play' ></i> &nbsp;Finalizeaza
+                        </span>
                         <!-- <span class="app-live-match__center-templates-center-status"><i class='bx bx-play' ></i> &nbsp;10:00</span> -->
                         <!-- <span class="app-live-match__center-templates-center-timer">09:35</span> -->
                     </div>
@@ -96,12 +104,22 @@
                     </template>
                 </vs-button>
                 <span v-else class="no-teams">Nu poti adauga meciuri!(nu au fost adaugate echipele)</span>
-                    <AppMatch 
-                        v-for="m in live.matches" 
-                        :team1="m.team1.name" 
-                        :team2="m.team2.name"
+                    <div v-if="live.matches">
+                        <AppMatch 
+                        v-for="m in live.matches.filter(match=>match.status!='played')" 
+                        :team1="m.team1" 
+                        :team2="m.team2"
+                        :status="m.status"
                         :key="m.id" 
                         style="margin-top:1rem;"/>
+                    <AppMatch 
+                        v-for="m in live.matches.filter(match=>match.status=='played')" 
+                        :team1="m.team1" 
+                        :team2="m.team2"
+                        :status="m.status"
+                        :key="m.id" 
+                        style="margin-top:1rem;"/>
+                    </div>
                 </div>
                 <vs-table v-if="activeSection==2">
                     <template #thead>
@@ -183,6 +201,9 @@
                         <vs-th>
                         Goluri
                         </vs-th>
+                        <vs-th>
+                        Autogoluri
+                        </vs-th>
                     </vs-tr>
                     </template>
                     <template #tbody>
@@ -202,7 +223,10 @@
                          <span v-if="tr.team_id">{{tr.team_id.name}}</span>
                         </vs-td>
                         <vs-td>
-                         <i class='bx bx-football' v-for="x in i" :key="x"></i>
+                         <i class='bx bx-football' v-for="x in tr.goals" :key="x"></i>
+                        </vs-td>
+                        <vs-td>
+                         <i class='bx bx-football' v-for="x in tr.autogoals" :key="x"></i>
                         </vs-td>
                     </vs-tr>
                     </template>
@@ -273,7 +297,7 @@
             </vs-button>
         </vs-dialog>
 
-         <vs-dialog not-close v-model="goal_modal" v-if="goal_modal">
+         <vs-dialog  v-model="goal_modal" v-if="goal_modal">
         <template #header>
           <h4 class="not-margin">
             Adauga (sterge) gol / autogol
@@ -294,6 +318,7 @@
         Adauga autogol
         </MdButton>
         <MdButton
+            v-if="goal_stats.player_id.goals>0"
             class="goal-dialog-btn md-raised md-accent"
             style="width:100%"
             @click="deleteGoal(1)"
@@ -301,6 +326,7 @@
         Sterge gol
       </MdButton>
         <MdButton
+            v-if="goal_stats.player_id.autogoals>0"
             class="goal-dialog-btn md-raised md-accent"
             style="width:100%"
             @click="deleteGoal(2)"
@@ -366,6 +392,25 @@ export default {
             this.goal_modal = true;
             this.goal_stats = stats;
         },
+        finishMatch(){
+            let data = {
+                team1:{
+                    id:this.live.top.game.live.team1._id,
+                    gm:this.live.top.game.live.team1.stats.gm
+                },
+                team2:{
+                    id:this.live.top.game.live.team2._id,
+                    gm:this.live.top.game.live.team2.stats.gm
+                },
+                match_id:this.live.top.game.live._id,
+            }
+            this.axios.post('/finish-match',data).then((response) => { 
+            response = response.data;
+            this.$emit('reload')
+            // this.$store.commit("SET_AUTH",response.logged); 
+            console.log(response)
+        })
+        },
         addGoal(goal_type){
         let data = {
             user_id:this.$store.state.user_id,
@@ -375,6 +420,7 @@ export default {
             team_1:this.live.top.game.live.team1._id,
             team_2:this.live.top.game.live.team2._id,
             game_id:this.live.top.game.id,
+            match:this.live.top.game.live._id,
             goal_type
         }
         this.axios.post('/add-goal',data).then((response) => { 
@@ -392,7 +438,7 @@ export default {
                 })
                 this.goal_modal = false;
                 this.goal_stats = null;
-
+                this.$emit('reload')
             }
         })
         console.log(data);  
@@ -415,6 +461,7 @@ export default {
             team_1:this.live.top.game.live.team1._id,
             team_2:this.live.top.game.live.team2._id,
             game_id:this.live.top.game.id,
+            match:this.live.top.game.live._id,
             goal_type
         }
         console.log(data)
@@ -434,7 +481,7 @@ export default {
                 })
                 this.goal_modal = false;
                 this.goal_stats = null;
-
+                this.$emit('reload')
             }
         })
         console.log(data);  
@@ -468,7 +515,7 @@ export default {
             this.axios.post('/add-match',data).then((response) => {
                 this.loadMatches = this.matchDialog = false;
                 // this.live.matches.push(data.matches); 
-                this.live.matches = response.data.succes;
+                if(response.data.succes) this.$emit('reload');
                 console.log(response)
             })
         }

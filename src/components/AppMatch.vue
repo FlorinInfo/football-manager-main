@@ -3,13 +3,14 @@
         <div class="app-match-live"></div>
         <div class="app-match__team">
             <img src="../assets/images/club.png" alt="club">
-            <span>Echipa {{team1}}</span>
+            <span>Echipa {{team1.name}}</span>
         </div>
         <div class="app-match__score">
-            <span>vs</span>
+            <span v-if="status=='waiting'">vs</span>
+            <span v-else>{{team1.stats.gm}}-{{team2.stats.gm}}</span>
         </div>
         <div class="app-match__team">
-            <span >Echipa {{team2}}</span>
+            <span >Echipa {{team2.name}}</span>
             <img src="../assets/images/club.png" alt="club">
         </div>
     </div>
@@ -19,12 +20,15 @@
 export default {
     props:{
         team1:{
-            type:String,
-            default:""
+            type:Object,
+            default:()=>{}
         },
         team2:{
-            type:String,
-            default:""
+            type:Object,
+            default:()=>{}
+        },
+        status:{
+            type:String
         }
     }
 }
@@ -53,9 +57,11 @@ export default {
 
     &__team {
         display: flex;
+        width: 40%;
 
         &:nth-child(2) {
             margin-right: 3rem;
+            justify-content: flex-end;
         }
 
         &:nth-child(4) {

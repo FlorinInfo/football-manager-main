@@ -1,14 +1,27 @@
 <template>
     <div class="app-game-view">
-        <AppGame :game="game" :extented="true" @registerToGame="registerToGame" @loadTeams="loadPage"/>
+        <div v-if="$route.params.c_type=='full'">
+            <LiveMatch :live="live" @reload="loadPage"/>
+        </div>
+        <AppGame  
+            v-else
+            :game="game" 
+            :extented="true" 
+            @registerToGame="registerToGame" 
+            @loadTeams="loadPage"/>
     </div>
 </template>
 
 <script>
+import LiveMatch from "../components/LiveMatch.vue";
 export default {
+    components:{
+        LiveMatch
+    },
     data(){
         return {
-            game:null
+            game:null,
+            live:null
         }
     },
     methods:{
@@ -52,13 +65,24 @@ export default {
                 token:this.$store.state.token,
                 game_id:this.$route.params.id
             }
-            this.axios.get('/get-game', { params:credentials }).then((response) => {
-            response = response.data;
-            this.game = {...response.game};
-            this.$store.commit("SET_ADD_TEAMS", response.game.teams);
-            loading.close()
-            console.log(response)   
-            })
+            if(this.$route.params.c_type=="full") {
+                this.axios.get('/get-live', { params:credentials }).then((response) => {
+                    response = response.data;
+                    this.live = response.data;
+                    this.$store.commit("SET_AUTH",response.logged); 
+                    loading.close()
+                    console.log("xxx",response)   
+                })
+            }
+            else {
+                this.axios.get('/get-game', { params:credentials }).then((response) => {
+                response = response.data;
+                this.game = {...response.game};
+                this.$store.commit("SET_ADD_TEAMS", response.game.teams);
+                loading.close()
+                console.log(response)   
+                })
+            }
         }
     },
     beforeMount() {

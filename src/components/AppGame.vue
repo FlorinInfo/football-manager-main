@@ -38,7 +38,8 @@
             </div>
         </div>
       </md-card-content>
-      <md-card-actions >
+      <md-card-actions > 
+        <md-button class="md-primary" v-if="$route.name=='Home'" @click="goLink">Vezi</md-button>
         <md-button class="md-primary">
           <div v-if="!edit">
             <span v-if="game.players==game.max_players">In proces</span>
@@ -126,8 +127,10 @@ export default {
         let pic = Math.floor(Math.random() * (3 - 1 + 1) + 1)
         return pic + '.jpg';
       },
-      goLink(){
-        this.$router.push("/campionat/" + this.game._id);
+      goLink(){ 
+        let c_type = "";
+        if(this.$route.name == 'Home') c_type = "/full";
+        this.$router.push("/campionat/" + this.game._id + c_type);
       },
       openDTeam() {
         this.$store.commit("SET_D_TEAM", true);

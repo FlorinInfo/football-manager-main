@@ -1,7 +1,39 @@
 <template>
     <div class="app-stadium">
         <img src="../assets/images/field.jpg" class="app-stadium__field" alt="">
-        <div class="app-stadium__player app-stadium__player-1" @click="$emit('openGoalModal',team1[0])">
+        <div 
+            class="app-stadium__player " 
+            :class="`app-stadium__player-${index+1}`"
+            v-for="(t, index) in team1"
+            :key="index"
+            @click="$emit('openGoalModal',t)">
+            <img src="../assets/images/red-tshirt.png" alt="team-1">
+            <span v-if="t">{{t.player_id.first_name}}</span>
+            <span v-else>???</span>
+            <div class="app-stadium__player--goals" v-if="t.player_id.goals">
+                <img src="../assets/images/football-ball.png" alt="">
+                <div class="app-stadium__player--goals-nr" v-if="t.player_id.goals>1">
+                    <p>{{t.player_id.goals}}</p>
+                </div>
+            </div>
+        </div>
+        <div 
+            v-for="(t, index) in team2" 
+            :key="index"
+            :class="`app-stadium__player-${index+7}`"
+            class="app-stadium__player " 
+            @click="$emit('openGoalModal',t)">
+            <img src="../assets/images/blue-tshirt.png" alt="">
+            <span v-if="t">{{t.player_id.first_name}}</span>
+            <span v-else>???</span>
+            <div class="app-stadium__player--goals" v-if="t.player_id.goals">
+                <img src="../assets/images/football-ball.png" alt="">
+                <div class="app-stadium__player--goals-nr" v-if="t.player_id.goals>1">
+                    <p>{{t.player_id.goals}}</p>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="app-stadium__player app-stadium__player-1" @click="$emit('openGoalModal',team1[0])">
             <img src="../assets/images/red-tshirt.png" alt="">
             <span v-if="team1[0]">{{team1[0].player_id.first_name}}</span>
             <span v-else>???</span>
@@ -30,8 +62,8 @@
             <img src="../assets/images/red-tshirt.png" alt="">
             <span v-if="team1[5]">{{team1[5].player_id.first_name}}</span>
             <span v-else>???</span>
-        </div>
-        <div class="app-stadium__player app-stadium__player-7" @click="$emit('openGoalModal',team2[0])">
+        </div> -->
+        <!-- <div class="app-stadium__player app-stadium__player-7" @click="$emit('openGoalModal',team2[0])">
             <img src="../assets/images/blue-tshirt.png" alt="">
             <span v-if="team2[0]">{{team2[0].player_id.first_name}}</span>
             <span v-else>???</span>
@@ -60,12 +92,17 @@
             <img src="../assets/images/blue-tshirt.png" alt="">
             <span v-if="team2[5]">{{team2[5].player_id.first_name}}</span>
             <span v-else>???</span>
-        </div> 
+        </div>  -->
     </div>
 </template>
 
 <script>
 export default {
+    computed:{
+        getClass(index) {
+            return 'app-stadium__player-' + index;
+        }
+    },
     props:{
         team1:{
             type:Array,
@@ -95,9 +132,41 @@ export default {
         top: 0;
         cursor: pointer;
 
+        &--goals {
+            position: absolute;
+            top: -5px;
+
+            img {
+                width: 16px!important;
+                position: relative; 
+            }
+
+            &-nr {
+                position: absolute;
+                top: 10px;
+                left: 6px;
+                background-color: white;
+                width: 15px;
+                height: 15px;
+                display: flex;
+                justify-content: center;
+                align-content: center;
+                border-radius: 10px;
+                box-sizing: border-box;
+                box-shadow: 0 0 0 2px rgb(0, 0, 0);
+
+                p {
+                    display: block;
+                    font-family: $font-bold!important;  
+                    transform: translateY(-2px);  
+                }
+            }
+        }
+
         img {
             width: 50px;
             border-radius: 50%;
+            position: relative;
         }
 
         span {
