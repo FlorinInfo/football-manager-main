@@ -129,7 +129,7 @@ export default {
       },
       goLink(){ 
         let c_type = "";
-        if(this.$route.name == 'Home') c_type = "/full";
+        if(this.$route.name == 'Home') c_type = "/full"; 
         this.$router.push("/campionat/" + this.game._id + c_type);
       },
       openDTeam() {

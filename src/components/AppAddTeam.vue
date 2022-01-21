@@ -40,6 +40,7 @@ export default {
         },
         addTeam() {
             this.$emit('addTeam', this.name);
+            this.name = "";
         }
     },
     watch:{

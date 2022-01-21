@@ -8,6 +8,8 @@ import GameAdd from "../views/GameAdd.vue";
 import Statistics from "../views/Statistics.vue";
 import Game from "../views/Game.vue";
 
+import Test from "../views/Test.vue";
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -40,6 +42,11 @@ const routes = [
     path:"/campionat/:id/:c_type?",
     name:"Campionat",
     component:Game
+  },
+  {
+    path:"/test/",
+    name:"Campionat",
+    component:Test
   }
 ]
 

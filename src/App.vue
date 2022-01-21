@@ -67,7 +67,30 @@ html {
   padding-top:0!important;
 }
 
+.login-dialog > .vs-dialog {
+  min-width: 700px!important;
+}
+
 .vs-dialog {
   padding: 2rem 1rem;
+}
+
+@media screen and (max-width: 700px) {
+  .login-dialog > .vs-dialog {
+    min-width: 90vw!important;
+  }
+  .app-logged {
+    &__main {
+      width: 100vw;
+      padding-left: .5rem;
+      padding-right: .5rem;
+    }
+  }
+}
+@media screen and (max-width: 325px) {
+  .vs-dialog__header {
+    padding-left: 0!important;
+    padding-right: 0!important;
+  }
 }
 </style>

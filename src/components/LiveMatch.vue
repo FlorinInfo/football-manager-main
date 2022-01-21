@@ -6,7 +6,11 @@
                 <span><i class='bx bxs-map-pin' ></i> &nbsp; {{live.top.stadium.name}}</span>
             </div>
             <div class="app-live-match__center">
-                <div class="app-live-match__center-templates">
+                <div v-if="!live.top.game.live" style="display:flex;justify-content:space-between;">
+                    <md-button class="md-raised md-primary" @click="matchDialog=true, changeSection(1)">Adauga meci</md-button>
+                    <md-button class="md-raised md-accent" @click="$emit('endGame', live.top.game.id)">Finalizeaza campionat</md-button>
+                </div>
+                <div class="app-live-match__center-templates" v-else>
                     <div class="app-live-match__center-template">
                         <img src="../assets/images/club.png" alt="">
                         <div class="app-live-match__center-template-name" v-if="live.top.game.live">

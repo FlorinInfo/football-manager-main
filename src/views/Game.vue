@@ -1,10 +1,13 @@
 <template>
-    <div class="app-game-view">
-        <div v-if="$route.params.c_type=='full'">
-            <LiveMatch :live="live" @reload="loadPage"/>
+    <div class="app-game-view" >
+        <div v-if="$route.params.c_type=='full'&&game_status==1">
+            <LiveMatch :live="live" @reload="loadPage" @endGame="endGame"/>
+        </div>
+        <div v-else>
+            Statistici campionat
         </div>
         <AppGame  
-            v-else
+            v-if="$route.params.c_type!='full'"
             :game="game" 
             :extented="true" 
             @registerToGame="registerToGame" 
@@ -21,7 +24,9 @@ export default {
     data(){
         return {
             game:null,
-            live:null
+            live:null,
+            game_status:0,
+            loading:true
         }
     },
     methods:{
@@ -32,9 +37,9 @@ export default {
                 game_id:id
             }
             console.log(id)
-            const loading = this.$vs.loading()
+            this.loading = this.$vs.loading()
             this.axios.post('/register-to-game',data).then((response) => {
-            loading.close()
+            this.loading.close()
                 if(response.data.status){
                 this.$vs.notification({
                     progress: 'auto',
@@ -58,8 +63,19 @@ export default {
             }
             })
         },
+        endGame(game_id) {
+            const credentials = {
+                user_id:this.$store.state.user_id,
+                token:this.$store.state.token,
+                game_id:game_id
+            }
+            this.axios.post('/end-game', { params:credentials }).then((response) => {
+                response = response.data;
+                if(response.status) this.loadPage();  
+            })
+        },
         loadPage() {
-            const loading = this.$vs.loading()
+            this.loading = this.$vs.loading()
             const credentials = {
                 user_id:this.$store.state.user_id,
                 token:this.$store.state.token,
@@ -69,8 +85,9 @@ export default {
                 this.axios.get('/get-live', { params:credentials }).then((response) => {
                     response = response.data;
                     this.live = response.data;
+                    this.game_status = response.data.game_status;
                     this.$store.commit("SET_AUTH",response.logged); 
-                    loading.close()
+                    this.loading.close()
                     console.log("xxx",response)   
                 })
             }
@@ -79,7 +96,7 @@ export default {
                 response = response.data;
                 this.game = {...response.game};
                 this.$store.commit("SET_ADD_TEAMS", response.game.teams);
-                loading.close()
+                this.loading.close()
                 console.log(response)   
                 })
             }

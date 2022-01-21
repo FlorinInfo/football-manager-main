@@ -1,14 +1,15 @@
 <template>
     <div class="app-homepage">
         <div class="app-homepage-unlogged" v-if="$store.getters.logged_User!=='true'">
-        <lottie-player 
+            <AppParallaxBackground/>
+        <!-- <lottie-player 
             src="https://assets8.lottiefiles.com/packages/lf20_s0e2CP.json"  
             background="transparent"  speed="1"  style="width: 300px; height: 300px;margin-left:auto;"  
             loop autoplay>
-        </lottie-player>            
+        </lottie-player>             -->
         <div class="app-homepage-unlogged__main">
                 <div class="center" style="width:100%;">
-                <vs-dialog overflow-hidden prevent-close not-close v-model="active">
+                <vs-dialog overflow-hidden prevent-close not-close v-model="active" class="login-dialog">
                     <template #header>
                     <h4 class="not-margin app-homepage-unlogged__main-title">
                         Bine ai venit 
@@ -55,7 +56,11 @@
 </template>
 
 <script>
+    import AppParallaxBackground from "../components/AppParallaxBackground.vue";
     export default {
+    components:{
+        AppParallaxBackground
+    },
       data:() => ({
         active: false,
         login:{
@@ -82,9 +87,12 @@
             this.axios.get('/get-my-games', { params:credentials }).then((response) => {
                     response = response.data;
                     this.$store.commit("SET_AUTH",response.logged); 
-                    this.myGames = [...response.games]
-                    if(this.myGames.length == 0) {
-                        this.$router.push('/campionate');
+                    console.log(response)
+                    if(response.logged==true){
+                        this.myGames = [...response.games]
+                        if(this.myGames.length == 0) {
+                            this.$router.push('/campionate');
+                        }
                     }
                     loading.close()
                     console.log("xxx",response)   
@@ -114,9 +122,10 @@
         position: relative;
         width: 100vw;
         height: 100vh;
-        background-image: linear-gradient(to right bottom, rgba(0, 0, 0, 0.8), rgba(255, 255, 255, 0)),url("../assets/images/background.jpg");
-        background-position: center;
-        background-size: cover;
+        background-color: #0f1624;
+        // background-image: linear-gradient(to right bottom, rgba(0, 0, 0, 0.8), rgba(255, 255, 255, 0)),url("../assets/images/background.jpg");
+        // background-position: center;
+        // background-size: cover;
         // filter: blur(3px);
 
         &__main {
