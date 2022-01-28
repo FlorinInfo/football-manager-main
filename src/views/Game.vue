@@ -4,7 +4,10 @@
             <LiveMatch :live="live" @reload="loadPage" @endGame="endGame"/>
         </div>
         <div v-else>
-            Statistici campionat
+            <div v-if="live">
+                 Statistici campionat
+            <div v-for="m in live.matches" :key="m.id">{{m}}</div>
+            </div>
         </div>
         <AppGame  
             v-if="$route.params.c_type!='full'"
