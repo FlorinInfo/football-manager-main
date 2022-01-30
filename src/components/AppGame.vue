@@ -140,7 +140,8 @@ export default {
         return pic + '.jpg';
       },
       goLink(link){ 
-        if(typeof link == String) {
+        // alert(typeof link)
+        if(typeof link == 'string') {
           this.$router.push(link);
           console.log(link)
         }
