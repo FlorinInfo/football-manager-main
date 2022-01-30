@@ -1,60 +1,73 @@
-import Vue from 'vue'
-import App from './App.vue'
-import './registerServiceWorker'
-import router from './router'
-import store from './store'
 
-Vue.config.productionTip = false
+// =========================================================
+//
+// * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+// The Vue build version to load with the `import` command
+// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
+import Vue from "vue";
+import VueRouter from "vue-router";
+import App from "./App";
+
+// router setup
+import routes from "./routes/routes";
+
+// Plugins
+import GlobalComponents from "./globalComponents";
+import GlobalDirectives from "./globalDirectives";
+import Notifications from "./components/NotificationPlugin";
+
+import AppGame from "./components/AppGame.vue";
+Vue.component("AppGame",AppGame) 
+
+// MaterialDashboard plugin
+import MaterialDashboard from "./material-dashboard";
+
+import Chartist from "chartist";
+import vuetify from "./plugins/vuetify";
+
+import VueCookies from 'vue-cookies'
+Vue.use(VueCookies)
 
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 Vue.use(VueAxios, axios)
 axios.defaults.baseURL = 'http://localhost:6626';
 
-import VueCookies from 'vue-cookies'
-Vue.use(VueCookies)
-
-// Components
-
-import AppGame from "./components/AppGame.vue";
-Vue.component("AppGame",AppGame)
-
-import Vuesax from 'vuesax'
-
-import 'vuesax/dist/vuesax.css' //Vuesax styles
-Vue.use(Vuesax, {
-  colors: {
-    primary:'rgb(36, 33, 69)',
-    success:'rgb(23, 201, 100)',
-    danger:'rgb(242, 19, 93)',
-    warning:'rgb(255, 130, 0)',
-    dark:'rgb(36, 33, 69)'
-  }
-})
-
-
-
-
-
-// Vue material components
-
-import { MdCard, MdIcon, MdButton } from 'vue-material/dist/components'
-import 'vue-material/dist/vue-material.min.css'
-import 'vue-material/dist/theme/default.css'
-
-Vue.use(MdCard)
-Vue.use(MdIcon)
-Vue.use(MdButton)
-
-import 'boxicons/css/boxicons.min.css'
+import Vuex from 'vuex'
+Vue.use(Vuex)
+import store from "./store";
 
 import VueCtkDateTimePicker from 'vue-ctk-date-time-picker';
 import 'vue-ctk-date-time-picker/dist/vue-ctk-date-time-picker.css';
- 
 Vue.component('VueCtkDateTimePicker', VueCtkDateTimePicker);
- 
+
+
+
+// configure router
+const router = new VueRouter({
+  mode: "history",
+  routes, // short for routes: routes
+  linkExactActiveClass: "nav-item active",
+});
+
+Vue.prototype.$Chartist = Chartist;
+
+Vue.use(VueRouter);
+Vue.use(MaterialDashboard);
+Vue.use(GlobalComponents);
+Vue.use(GlobalDirectives);
+Vue.use(Notifications);
+
+/* eslint-disable no-new */
 new Vue({
+  el: "#app",
+  render: (h) => h(App),
   router,
+  vuetify,
   store,
-  render: h => h(App)
-}).$mount('#app')
+
+  data: {
+    Chartist: Chartist,
+  },
+});

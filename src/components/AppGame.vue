@@ -6,7 +6,7 @@
           <div 
             class="app-game__background" 
             @click="goLink"
-            :style="{backgroundImage:'url(' + require('../assets/images/games/' + getImgUrl()) + ')'}">
+            >
           </div>
         </md-card-media>
         <md-card-header>
@@ -39,8 +39,20 @@
         </div>
       </md-card-content>
       <md-card-actions > 
-        <md-button class="md-primary" v-if="$route.name=='Home'" @click="goLink">Vezi</md-button>
-        <md-button class="md-primary">
+        
+        <md-button class="md-primary md-raised" v-if="game.org_id==$store.state.user_id" @click="goLink('/editeaza-campionat/'+game._id)">
+          <span>Editeaza</span> 
+        </md-button> 
+        <md-button class="md-primary"  v-else @click="$emit('registerToGame',game._id)"> 
+          <div>
+            <span v-if="game.players==game.max_players">In proces</span>
+            <span v-else-if="$route.name=='Home'||game.reg" >Inscris</span>
+            <span v-if="game.reg==false&&game.players!=game.max_players" >Inscrie-te</span>
+          </div>
+          <!-- <span v-else @click="goLink">Vezi campionat</span> -->
+        </md-button>
+        <!-- <md-button class="md-primary" v-if="$route.name=='Home'" @click="goLink">Vezi</md-button>
+        <md-button class="md-primary" v-else>
           <div v-if="!edit">
             <span v-if="game.players==game.max_players">In proces</span>
             <span v-else-if="game.reg" @click="$emit('registerToGame',game._id)">Inscris</span>
@@ -50,7 +62,7 @@
         </md-button>
         <md-button class="md-primary md-raised" v-if="game.org_id==$store.state.user_id&&extented==true" @click="openDTeam">
           <span>Adauga echipe</span> 
-        </md-button>
+        </md-button> -->
       </md-card-actions>
       <div class="app-game__extend" v-if="extented">
         <vs-table striped>
@@ -93,16 +105,16 @@
         <!-- {{game.playersFull}} -->
       </div>
     </md-card>
-    <AppAddTeam @addTeam="addTeam"/>
+    <!-- <AppAddTeam @addTeam="addTeam"/> -->
     </div>
 </template>
 
 <script>
-import AppAddTeam from "../components/AppAddTeam.vue";
+// import AppAddTeam from "../components/AppAddTeam.vue";
 export default {
-  components:{
-    AppAddTeam
-  },
+  // components:{
+  //   AppAddTeam
+  // },
     props:{
         game:{
             type:Object,
@@ -127,10 +139,15 @@ export default {
         let pic = Math.floor(Math.random() * (3 - 1 + 1) + 1)
         return pic + '.jpg';
       },
-      goLink(){ 
-        let c_type = "";
-        if(this.$route.name == 'Home') c_type = "/full"; 
-        this.$router.push("/campionat/" + this.game._id + c_type);
+      goLink(link){ 
+        if(typeof link == String) {
+          this.$router.push(link);
+          console.log(link)
+        }
+        else {
+          let c_type = "/full";
+          this.$router.push("/campionat/" + this.game._id + c_type);
+        }
       },
       openDTeam() {
         this.$store.commit("SET_D_TEAM", true);
@@ -203,12 +220,9 @@ export default {
 .app-game {
 
     &__background {
-        max-height: 200px;
-        height: 200px;
         background-position: center!important;
         background-repeat: no-repeat!important;
         background-size: cover; 
-        background: url("../assets/images/game-background.jpg");
         width: 100%;
         cursor: pointer;
     }
@@ -225,5 +239,14 @@ export default {
 
 .md-title {
   cursor: pointer;
+  color: #ffff!important;
+}
+
+.md-card-header {
+  background: linear-gradient(60deg, #66bb6a, #43a047)!important;
+}
+
+.md-card .md-subhead {
+  opacity: 1;
 }
 </style>
