@@ -198,6 +198,7 @@ export default {
             }
             this.axios.get('/get-game', { params:credentials }).then((response) => {
                 response = response.data;
+                if(response.game.org_id!=this.$store.state.user_id) window.location = "/";
                 console.log(response)   
                 this.game = {...response.game};
                 this.$store.commit("SET_ADD_TEAMS", response.game.teams);
