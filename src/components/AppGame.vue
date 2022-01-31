@@ -146,8 +146,7 @@ export default {
           console.log(link)
         }
         else {
-          let c_type = "/full";
-          this.$router.push("/campionat/" + this.game._id + c_type);
+          this.$router.push("/campionat/" + this.game._id);
         }
       },
       openDTeam() {

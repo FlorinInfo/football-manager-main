@@ -15,6 +15,7 @@ import Statistics from "@/pages/Statistics.vue";
 import Games from "@/pages/Games.vue"; 
 import GameAdd from "@/pages/GameAdd.vue"; 
 import GameEdit from "@/pages/GameEdit.vue"; 
+import Game from "@/pages/Game.vue";
 
 const routes = [
   {
@@ -47,6 +48,12 @@ const routes = [
     name:"GameEdit",
     component:GameEdit
   },
+  {
+    path:"/campionat/:id",
+    name:"Game",
+    component:Game
+  },
+
   // {
   //   path: "/",
   //   component: DashboardLayout,
