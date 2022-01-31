@@ -27,19 +27,7 @@
         </span>
     </div>
     <div class="app-game__section app-game__section--1" v-if="activeSection==1">
-        <stats-card data-background-color="green" >
-          <template slot="content">
-            <p class="category">Revenue</p>
-            <h3 class="title">$34,245</h3>
-          </template>
-
-          <template slot="footer">
-            <div class="stats">
-              <md-icon>date_range</md-icon> 
-              Last 24 Hours
-            </div>
-          </template>
-        </stats-card> 
+        <AppMatchCard/>
     </div>
     <div class="app-game__section app-game__section--2" v-if="activeSection==2">
         <div v-if="live.teams.length==0" style="text-align:center;">
@@ -112,12 +100,13 @@
 
 
 <script>
-import {
-  StatsCard,
-} from "@/components";
+// import {
+//   StatsCard,
+// } from "@/components";
+import AppMatchCard from "../components/AppMatchCard.vue";
 export default {
     components:{
-        StatsCard
+        AppMatchCard
     },
     data(){
         return {
@@ -222,4 +211,5 @@ export default {
         }
     }
 }
+
 </style>
