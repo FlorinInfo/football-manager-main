@@ -85,6 +85,40 @@
                         </md-table-cell>
                 </md-table-row>
                 </md-table>
+                <div class="md-layout" v-if="game.teams">
+                    <div class="md-layout-item md-size-100">
+                        <h4 >Adauga meciuri</h4>
+                    </div>
+                    <div class="md-layout-item md-small-size-100 md-size-50">
+                        <md-field> 
+                        <label>Echipa 1</label>
+                        <md-select  name="movie" id="movie" v-model="templateAdd[0].team1">
+                            <md-option v-for="(t) in game.teams" :key="t._id" :value="t._id">{{t.name}}</md-option>
+                        </md-select>  
+                        <md-icon>group</md-icon>  
+                        </md-field>
+                        <!-- <span class="input-error" v-if="errors&&errors.price">{{errors.price}}</span>    -->
+                    </div>
+                    <div class="md-layout-item md-small-size-100 md-size-50">
+                        <md-field> 
+                        <label>Echipa 2</label>
+                        <md-select  name="movie" id="movie" v-model="templateAdd[0].team2">
+                            <md-option v-for="(t) in game.teams" :key="t._id" :value="t._id">{{t.name}}</md-option>
+                        </md-select>  
+                        <md-icon>group</md-icon>  
+                        </md-field>
+                        <!-- <span class="input-error" v-if="errors&&errors.price">{{errors.price}}</span>    -->
+                    </div>
+                    <div class="md-layout-item md-size-50 text-left">
+                        <md-radio v-model="templateAdd[0].match_type" :value="3">Meci simplu</md-radio>
+                        <md-radio v-model="templateAdd[0].match_type" :value="2">Semifinala</md-radio>
+                        <md-radio v-model="templateAdd[0].match_type" :value="1">Finala</md-radio>
+                    </div>
+                    <div class="md-layout-item md-size-50 text-right">
+                        <md-button class="md-raised md-danger" @click="addMatches">Adauga meci</md-button>
+                    </div> 
+                </div>
+                {{game}}
                 <!-- {{game.playersFull}} -->
                 <!-- <div class="md-layout-item md-small-size-100 md-size-100">
                     <md-table >
@@ -114,7 +148,14 @@ export default {
             live:null,
             game_status:0,
             loading:true,
-            team_name:""
+            team_name:"",
+            templateAdd:[
+                {
+                    team1:"",
+                    team2:"",
+                    match_type:3
+                }
+            ],
         }
     },
     methods:{
@@ -188,6 +229,23 @@ export default {
                 }
             }).catch(error=>{
                 console.log(error);
+            })
+        },
+        addMatches() {
+            let data = {
+                matches:[...this.templateAdd],
+                stadium_id :this.game.stadium_id._id,
+                game_id : this.game._id
+            }
+            console.log(data);
+            this.axios.post('/add-match',data).then((response) => {
+                this.loadMatches = this.matchDialog = false;
+                // this.live.matches.push(data.matches); 
+                if(response.data.succes) {
+                    this.templateAdd[0].team1 = "";
+                    this.templateAdd[0].team2 = "";
+                }
+                console.log(response)
             })
         },
         loadPage() {

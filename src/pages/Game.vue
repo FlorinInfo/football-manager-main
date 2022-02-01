@@ -27,7 +27,20 @@
         </span>
     </div>
     <div class="app-game__section app-game__section--1" v-if="activeSection==1">
-        <AppMatchCard/>
+        <AppMatchCard
+            v-for="m in live.matches.filter(match=>match.status!='played')" 
+            :key="m.id"
+            :team1="m.team1" 
+            :team2="m.team2"
+            :status="m.status"
+        />
+        <AppMatchCard
+            v-for="m in live.matches.filter(match=>match.status=='played')" 
+            :key="m.id"
+            :team1="m.team1" 
+            :team2="m.team2"
+            :status="m.status"
+        />
     </div>
     <div class="app-game__section app-game__section--2" v-if="activeSection==2">
         <div v-if="live.teams.length==0" style="text-align:center;">

@@ -3,7 +3,7 @@
         <md-card class="md-card-stats">
             <div class="match-card">
                 <div class="match-card__team">
-                    <span class="match-card__team-name">Echipa verder</span>
+                    <span class="match-card__team-name">{{team1.name}}</span>
                     <ul v-if="extend">
                         <li>Florin Bucataru</li>
                          <li>Florin Bucataru</li>
@@ -11,10 +11,11 @@
                     </ul>
                 </div>
                 <div class="match-card__score">
-                    1 : 2 
+                    <span v-if="status=='waiting'">vs</span>
+                    <span v-else>{{team1.stats.gm}} - {{team2.stats.gm}}</span>
                 </div>
                 <div class="match-card__team">
-                    <span class="match-card__team-name">Echipa rosie</span>
+                    <span class="match-card__team-name">{{team2.name}}</span>
                     <ul v-if="extend">
                         <li>Florin Bucataru</li>
                          <li>Florin Bucataru</li>
@@ -44,6 +45,17 @@
 <script>
 export default {
     props:{
+        team1:{
+            type:Object,
+            default:()=>{}
+        },
+        team2:{
+            type:Object,
+            default:()=>{}
+        },
+        status:{
+            type:String
+        },
         extented:{
             type:Boolean,
             default:false
@@ -68,7 +80,7 @@ export default {
         bottom: 16px;
         z-index: 10000;
         left: 50%;
-        transform: translateX(-20%);
+        transform: translateX(-50%);
         background-color: rgb(131, 131, 131);
         color: white;
         border-radius: 50%;
