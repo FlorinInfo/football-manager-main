@@ -5,9 +5,7 @@
                 <div class="match-card__team">
                     <span class="match-card__team-name">{{team1.name}}</span>
                     <ul v-if="extend">
-                        <li>Florin Bucataru</li>
-                         <li>Florin Bucataru</li>
-                          <li>Florin Bucataru</li>
+                        <li v-for="(p, index) in players1" :key="index">Florin Bucataru</li>
                     </ul>
                 </div>
                 <div class="match-card__score">
@@ -17,9 +15,7 @@
                 <div class="match-card__team">
                     <span class="match-card__team-name">{{team2.name}}</span>
                     <ul v-if="extend">
-                        <li>Florin Bucataru</li>
-                         <li>Florin Bucataru</li>
-                          <li>Florin Bucataru</li>
+                        <li v-for="(p, index) in players2" :key="index">Florin Bucataru</li>
                     </ul> 
                 </div>
             </div>
@@ -35,7 +31,7 @@
             x
             </md-card-actions> -->
         </md-card>
-        <div class="app-match__extend" @click="extend=!extend">
+        <div class="app-match__extend" @click="extendCard">
             <md-icon style="color:white;" v-if="!extend">arrow_circle_down</md-icon>
             <md-icon style="color:white;" v-else>arrow_circle_up</md-icon>
         </div>
@@ -45,6 +41,7 @@
 <script>
 export default {
     props:{
+        match_id:{},
         team1:{
             type:Object,
             default:()=>{}
@@ -63,7 +60,39 @@ export default {
     },
     data() {
         return {
-            extend:this.extented
+            extend:this.extented,
+            players1:[],
+            players2:[]
+        }
+    },
+    methods:{
+        async extendCard() {
+            if(!this.extend){
+                const credentials = {
+                    user_id:this.$store.state.user_id,
+                    token:this.$store.state.token,
+                    match_id:this.match_id,
+                    id_team1:this.team1._id,
+                    id_team2:this.team2._id,
+                }
+                console.log(credentials);
+                this.axios.get('/get-match-players', { params:credentials }).then((response) => {
+                    response = response.data;
+                    this.extend = !this.extend;
+                    this.players1 = response.team1.players;
+                    this.players2 = response.team2.players; 
+                    console.log(response);
+                })
+            }
+            else {
+                this.extend = false;
+            }
+        }
+    },
+    beforeMount(){
+        if(this.extented) {
+            this.extend = false;
+            this.extendCard();
         }
     }
 }

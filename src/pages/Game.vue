@@ -26,17 +26,31 @@
             Jucatori
         </span>
     </div>
+    <div class="app-game__section app-game__section--1" v-if="activeSection==0">
+        <!-- {{live.top.game.live._id}}
+        {{live.top.game.live.status}} -->
+        <AppMatchCard
+            :match_id="live.top.game.live._id"  
+            :team1="live.top.game.live.team1" 
+            :team2="live.top.game.live.team1"
+            :status="live.top.game.live.status"
+            :extented="true"
+        />
+    </div>
+    
     <div class="app-game__section app-game__section--1" v-if="activeSection==1">
         <AppMatchCard
             v-for="m in live.matches.filter(match=>match.status!='played')" 
-            :key="m.id"
+            :key="m._id"
+            :match_id="m._id"  
             :team1="m.team1" 
             :team2="m.team2"
             :status="m.status"
         />
         <AppMatchCard
             v-for="m in live.matches.filter(match=>match.status=='played')" 
-            :key="m.id"
+            :key="m._id"
+            :match_id="m._id" 
             :team1="m.team1" 
             :team2="m.team2"
             :status="m.status"
@@ -127,7 +141,7 @@ export default {
             live:null,
             game_status:0,
             loading:true,
-            activeSection:1, 
+            activeSection:0, 
         }
     },
     methods:{
