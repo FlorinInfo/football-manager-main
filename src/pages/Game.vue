@@ -30,9 +30,10 @@
         <!-- {{live.top.game.live._id}}
         {{live.top.game.live.status}} -->
         <AppMatchCard
+            @addGoal="addGoal"
             :match_id="live.top.game.live._id"  
             :team1="live.top.game.live.team1" 
-            :team2="live.top.game.live.team1"
+            :team2="live.top.game.live.team2"
             :status="live.top.game.live.status"
             :extented="true"
         />
@@ -40,6 +41,7 @@
     
     <div class="app-game__section app-game__section--1" v-if="activeSection==1">
         <AppMatchCard
+            @addGoal="addGoal"
             v-for="m in live.matches.filter(match=>match.status!='played')" 
             :key="m._id"
             :match_id="m._id"  
@@ -48,6 +50,7 @@
             :status="m.status"
         />
         <AppMatchCard
+            @addGoal="addGoal"
             v-for="m in live.matches.filter(match=>match.status=='played')" 
             :key="m._id"
             :match_id="m._id" 
@@ -181,6 +184,41 @@ export default {
             }
             })
         },
+        addGoal(goal_type, player_id){
+        let data = {
+            user_id:this.$store.state.user_id,
+            token:this.$store.state.token,
+            stadium_id:this.live.top.stadium.id,
+            player_id,
+            team_1:this.live.top.game.live.team1._id,
+            team_2:this.live.top.game.live.team2._id,
+            game_id:this.live.top.game.id,
+            match:this.live.top.game.live._id,
+            goal_type
+        }
+        console.log(data)
+        this.axios.post('/add-goal',data).then((response) => { 
+            response = response.data;
+            this.$store.commit("SET_AUTH",response.logged); 
+            if(response.status) {
+                // let text = 'Golul';
+                // if(goal_type==2) text = 'Autogolul';
+                this.goal_modal = false;
+                this.goal_stats = null;
+                this.loadPage();
+            }
+        })
+        // console.log(data);  
+    //               stadium_id: {{live.top.stadium.id}}
+    //   <br> 
+    // player_id: {{goal_stats.player_id._id}}   
+    //   <br> 
+    //   team_1:{{live.top.game.live.team1._id}}
+    //   <br>
+    // team_2:{{live.top.game.live.team2._id}}
+    //   <br>  
+    //   game_id: {{live.top.game.id}}
+        },
         endGame(game_id) {
             const credentials = {
                 user_id:this.$store.state.user_id,
@@ -224,6 +262,7 @@ export default {
         display: flex;
         justify-content: space-between;
         padding:0 0 2rem 0 ;
+        overflow-x: auto;
 
         span {
             font-size: 1.2rem;
