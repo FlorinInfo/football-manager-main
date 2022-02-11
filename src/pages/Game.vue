@@ -1,5 +1,6 @@
 <template>
     <div class="app-game" v-if="live">
+        
     <div class="app-game__sections">
         <span 
             :class="{'app-game__sections--active':activeSection==0}" 
@@ -26,11 +27,14 @@
             Jucatori
         </span>
     </div>
-    <div class="app-game__section app-game__section--1" v-if="activeSection==0">
+    <div class="app-game__section app-game__section--1" v-if="activeSection==0&&live.top.game.live">
         <!-- {{live.top.game.live._id}}
         {{live.top.game.live.status}} -->
+
         <AppMatchCard
             @addGoal="addGoal"
+            @finishMatch="finishMatch"
+            @deleteGoal="deleteGoal"
             :match_id="live.top.game.live._id"  
             :team1="live.top.game.live.team1" 
             :team2="live.top.game.live.team2"
@@ -42,6 +46,7 @@
     <div class="app-game__section app-game__section--1" v-if="activeSection==1">
         <AppMatchCard
             @addGoal="addGoal"
+            @deleteGoal="deleteGoal"
             v-for="m in live.matches.filter(match=>match.status!='played')" 
             :key="m._id"
             :match_id="m._id"  
@@ -51,6 +56,7 @@
         />
         <AppMatchCard
             @addGoal="addGoal"
+            @deleteGoal="deleteGoal"
             v-for="m in live.matches.filter(match=>match.status=='played')" 
             :key="m._id"
             :match_id="m._id" 
@@ -219,17 +225,66 @@ export default {
     //   <br>  
     //   game_id: {{live.top.game.id}}
         },
-        endGame(game_id) {
-            const credentials = {
+        deleteGoal(goal_type, player_id){
+            let data = {
                 user_id:this.$store.state.user_id,
                 token:this.$store.state.token,
-                game_id:game_id
+                stadium_id:this.live.top.stadium.id,
+                player_id,
+                team_1:this.live.top.game.live.team1._id,
+                team_2:this.live.top.game.live.team2._id,
+                game_id:this.live.top.game.id,
+                match:this.live.top.game.live._id,
+                goal_type
             }
-            this.axios.post('/end-game', { params:credentials }).then((response) => {
+            console.log(data)
+            this.axios.delete('/delete-goal',{data:data}).then((response) => { 
+                console.log(response);
                 response = response.data;
-                if(response.status) this.loadPage();  
+                // this.$store.commit("SET_AUTH",response.logged); 
+                this.$store.commit("SET_AUTH",response.logged); 
+                if(response.status) {
+                    // let text = 'Golul';
+                    // if(goal_type==2) text = 'Autogolul';
+                    this.goal_modal = false;
+                    this.goal_stats = null;
+                    this.loadPage();
+                }
+            })
+            console.log(data);  
+        },
+        finishMatch(){
+            let data = {
+                team1:{
+                    id:this.live.top.game.live.team1._id,
+                    gm:this.live.top.game.live.team1.stats.gm
+                },
+                team2:{
+                    id:this.live.top.game.live.team2._id,
+                    gm:this.live.top.game.live.team2.stats.gm
+                },
+                match_id:this.live.top.game.live._id,
+            }
+            console.log(data);
+            this.axios.post('/finish-match',data).then((response) => { 
+                response = response.data;
+                this.loadPage();
+                // this.$store.commit("SET_AUTH",response.logged); 
+                console.log(response)
             })
         },
+        // endGame() {
+        //     const credentials = {
+        //         user_id:this.$store.state.user_id,
+        //         token:this.$store.state.token,
+        //         game_id:this.live.top.game.id    
+        //     }
+        //     console.log(credentials)
+        //     this.axios.post('/end-game', { params:credentials }).then((response) => {
+        //         response = response.data;
+        //         if(response.status) this.loadPage();  
+        //     })
+        // },
         loadPage() {
             // this.loading = this.$vs.loading()
             const credentials = {

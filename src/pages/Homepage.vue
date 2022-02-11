@@ -14,8 +14,8 @@
                 <v-col cols="12" class="login-part d-flex align-center justify-center flex-column">
                 <div class="login-wrapper pt-md-4 pt-0">
                     <v-tabs grow>
-                    <v-tabs-slider></v-tabs-slider>
-                    <v-tab :href="`#tab-login`" >
+                    <v-tabs-slider color="success"></v-tabs-slider>
+                    <v-tab :href="`#tab-login`"  >
                         LOGIN
                     </v-tab>
                     <v-tab :href="`#tab-newUser`">
@@ -33,9 +33,11 @@
                                 <v-text-field
                                     v-model="login.email"
                                     label="Email Address"
+                                    color="success"
                                     required
                                 ></v-text-field>
                                 <v-text-field
+                                color="success"
                                     v-model="login.password"
                                     type="password"
                                     label="Password"
@@ -47,7 +49,7 @@
                                     large
                                     block
                                     :disabled="login.password.length === 0 || login.email.length === 0"
-                                    color="primary"
+                                    color="success"
                                     @click="loginUser"
                                 >
                                     Conecteaza-te</v-btn>
@@ -227,7 +229,7 @@ $body-bg: #F6F7FF !default;
 $content-padding:                           24px;
 
 // Colors //
-$primary:           #536DFE;
+$primary:           #43a047!important;
 $secondary:         #FF5C93;
 $error:             #ff4081;
 $warning:           #FFC260;
@@ -443,11 +445,11 @@ body {
 }
 
 .v-tab--active {
-    color:#1976d2!important;
+    color:#43a047!important;
 }
 
 .v-tab:hover {
-    color:#1976d2!important;
+    color:#43a047!important;
 }
 
 

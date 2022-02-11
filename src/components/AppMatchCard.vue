@@ -50,10 +50,10 @@
                             <md-button class="md-raised md-warning" @click="addGoal(2)">Adauga autogol</md-button>
                         </div> 
                         <div class="md-layout-item md-size-50 text-center">
-                            <md-button class="md-raised md-danger" @click="active=true">Sterge gol</md-button>
+                            <md-button class="md-raised md-danger" @click="deleteGoal(1)">Sterge gol</md-button>
                         </div> 
                         <div class="md-layout-item md-size-50 text-center">
-                            <md-button class="md-raised md-danger" @click="active=true">Sterge autogol</md-button>
+                            <md-button class="md-raised md-danger" @click="deleteGoal(2)">Sterge autogol</md-button>
                         </div> 
                     </div>
                 </md-dialog>
@@ -123,6 +123,10 @@ export default {
             this.$emit("addGoal", goal_type, this.player_id);
             this.showDialogGoal = false;
         },
+        deleteGoal(goal_type){
+            this.$emit("deleteGoal", goal_type, this.player_id);
+            this.showDialogGoal = false;
+        },
         openGoalDialog(id) {
             console.log(id)
             this.showDialogGoal = true;
@@ -130,6 +134,7 @@ export default {
         },
         onConfirm () {
         this.value = true;
+        this.$emit("finishMatch");
         },
         onCancel () {
         this.value = false;

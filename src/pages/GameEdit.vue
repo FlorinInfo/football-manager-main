@@ -118,7 +118,7 @@
                         <md-button class="md-raised md-danger" @click="addMatches">Adauga meci</md-button>
                     </div> 
                 </div>
-                {{game}}
+                <!-- {{game}} -->
                 <!-- {{game.playersFull}} -->
                 <!-- <div class="md-layout-item md-small-size-100 md-size-100">
                     <md-table >
