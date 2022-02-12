@@ -16,7 +16,7 @@
                 <div class="match-card__score">
                     <span v-if="status=='waiting'">vs</span>
                     <span v-else>{{team1.stats.gm}} - {{team2.stats.gm}}</span>
-                </div>
+                </div> 
                 <div class="match-card__team">
                     <span class="match-card__team-name">{{team2.name}}</span>
                     <ul v-if="extend">
