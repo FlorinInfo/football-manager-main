@@ -58,17 +58,19 @@
                     </div>
                 </md-dialog>
         </md-card>
-        <div class="app-match__extend" @click="extendCard" v-if="!extented">
+        <!-- <div class="app-match__extend" @click="extendCard" v-if="!extented">
             <md-icon style="color:white;" v-if="!extend">arrow_circle_down</md-icon>
             <md-icon style="color:white;" v-else>arrow_circle_up</md-icon>
-        </div>
+        </div> -->
     </div>
 </template>
 
 <script>
 export default {
     props:{
-        match_id:{},
+        match_id:{
+            type:String
+        },
         team1:{
             type:Object,
             default:()=>{}
@@ -120,7 +122,15 @@ export default {
             }
         },
         addGoal(goal_type){
-            this.$emit("addGoal", goal_type, this.player_id);
+            // alert(this.match_id)
+            let data = {
+                goal_type,
+                player_id:this.player_id,
+                team1:this.team1._id,
+                team2: this.team2._id,
+                match_id:this.match_id
+            }
+            this.$emit("addGoal", data); 
             this.showDialogGoal = false;
         },
         deleteGoal(goal_type){
@@ -144,6 +154,14 @@ export default {
         if(this.extented) {
             this.extend = false;
             this.extendCard();
+        }
+    },
+    watch:{
+        match_id() {
+            if(this.extented) {
+                this.extend = false;
+                this.extendCard();
+            }
         }
     }
 }

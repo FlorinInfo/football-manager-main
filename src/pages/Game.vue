@@ -190,27 +190,29 @@ export default {
             }
             })
         },
-        addGoal(goal_type, player_id){
-        let data = {
+        addGoal(data){
+            // alert("x2",team_2)    
+        let dataFull = {
             user_id:this.$store.state.user_id,
             token:this.$store.state.token,
             stadium_id:this.live.top.stadium.id,
-            player_id,
-            team_1:this.live.top.game.live.team1._id,
-            team_2:this.live.top.game.live.team2._id,
+            player_id:data.player_id,
+            team_1:data.team1,
+            team_2:data.team2,
             game_id:this.live.top.game.id,
-            match:this.live.top.game.live._id,
-            goal_type
+            match:data.match_id,
+            goal_type:data.goal_type
         }
-        console.log(data)
-        this.axios.post('/add-goal',data).then((response) => { 
+        console.log(dataFull)
+        this.axios.post('/add-goal',dataFull).then((response) => { 
             response = response.data;
             this.$store.commit("SET_AUTH",response.logged); 
             if(response.status) {
                 // let text = 'Golul';
                 // if(goal_type==2) text = 'Autogolul';
-                this.goal_modal = false;
-                this.goal_stats = null;
+                // this.goal_modal = false;
+                // this.goal_stats = null;  
+                console.log(response)  
                 this.loadPage();
             }
         })
@@ -246,8 +248,8 @@ export default {
                 if(response.status) {
                     // let text = 'Golul';
                     // if(goal_type==2) text = 'Autogolul';
-                    this.goal_modal = false;
-                    this.goal_stats = null;
+                    // this.goal_modal = false;
+                    // this.goal_stats = null;
                     this.loadPage();
                 }
             })
