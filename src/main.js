@@ -32,7 +32,7 @@ Vue.use(VueCookies)
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 Vue.use(VueAxios, axios)
-axios.defaults.baseURL = 'http://localhost:6626';
+axios.defaults.baseURL = 'https://football-backend-manager.herokuapp.com/';
 
 import Vuex from 'vuex'
 Vue.use(Vuex)

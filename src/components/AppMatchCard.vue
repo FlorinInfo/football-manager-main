@@ -17,8 +17,8 @@
                     <span v-if="status=='waiting'">vs</span>
                     <span v-else>{{team1.stats.gm}} - {{team2.stats.gm}}</span>
                 </div> 
-                <div class="match-card__team">
-                    <span class="match-card__team-name">{{team2.name}}</span>
+                <div class="match-card__team match-card__team--2">
+                    <span class="match-card__team-name match-card__team--2-name">{{team2.name}}</span>
                     <ul v-if="extend">
                         <li style="display:flex;" v-for="(p, index) in players2" :key="index">
             <span style="display:block;margin:auto 0;">{{p.player_id.first_name}} {{p.player_id.second_name}}</span>     
@@ -196,6 +196,16 @@ export default {
     &__team {
         display: flex;
         flex-direction: column;
+        width: calc(33.33% - 5px)!important;  
+        
+        &--2 {
+
+            &-name {
+                display: block;
+                margin-left: auto;  
+            }
+        }
+
 
         &-name {
             font-size: 1.2rem;
@@ -214,6 +224,9 @@ export default {
 
     &__score {
         font-size: 1.3rem;
+        width: calc(33.33% - 5px)!important;  
+        display: block;
+        text-align: center;
     }
 }
-</style>
+</style>    
