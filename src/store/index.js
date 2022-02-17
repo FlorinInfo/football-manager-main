@@ -79,7 +79,7 @@ export default new Vuex.Store({
     loginUser({commit}, credentials) {
       axios.post('/login', credentials).then((response) => {
         response = response.data;
-        console.log(response);
+        // console.log(response);
         if(response.logged&&response.status) {
           localStorage.setItem("user_id", response.user_id);
           localStorage.setItem("token", response.token);
@@ -98,7 +98,7 @@ export default new Vuex.Store({
       }
       axios.get('/stadiums', { params:credentials }).then((response) => {
         response = response.data;
-        console.log(response)
+        // console.log(response)
         commit("SET_AUTH",response.logged);
         commit("SET_STADIUMS",response);
         commit("SET_LOADING", false); 
@@ -112,8 +112,8 @@ export default new Vuex.Store({
       }
       axios.get('/add-game', { params:credentials }).then((response) => {
         response = response.data;
-        console.log(response)
-        console.log(response)
+        // console.log(response)
+        // console.log(response)
         commit("SET_AUTH",response.logged);
         if(response.game){
           response.game.teams = [...response.teams];
@@ -121,7 +121,7 @@ export default new Vuex.Store({
           // response.games = response.games.reverse();
           response.game.games = [...response.games]
           response.game.games = response.game.games.reverse()
-          console.log("zzzz",response.game) 
+          // console.log("zzzz",response.game) 
           commit("SET_ADD_GAME",response.game);
         }
         else {
@@ -140,7 +140,7 @@ export default new Vuex.Store({
       }
       axios.get('/get-games', { params:data }).then((response) => {
         response = response.data;
-        console.log(response)
+        // console.log(response)
         commit("SET_AUTH",response.logged); 
         commit("SET_GAMES",response.games.reverse());
         commit("SET_LOADING", false)
