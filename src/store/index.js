@@ -79,7 +79,7 @@ export default new Vuex.Store({
     loginUser({commit}, credentials) {
       axios.post('/login', credentials).then((response) => {
         response = response.data;
-        console.log(response);
+        // console.log(response);
         if(response.logged&&response.status) {
           localStorage.setItem("user_id", response.user_id);
           localStorage.setItem("token", response.token);

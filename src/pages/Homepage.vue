@@ -139,7 +139,7 @@
         </v-container>
     </v-app>
     <div v-else class="app-homepage-logged"> 
-            <div class="app-games__template" v-for="game in myGames" :key="game.game_id._id">
+            <div class="app-games__template" v-for="game in myGames.reverse()" :key="game.game_id._id">
                 <AppGame :game="game.game_id"/>       
             </div>
         </div>

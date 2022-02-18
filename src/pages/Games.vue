@@ -53,7 +53,7 @@ export default {
     computed:{
         gamesL() {
             return this.$store.state.games.length;
-        }
+        },
     },
     beforeMount(){
         this.$store.dispatch("getGames", this.$route.params.stadium_id);

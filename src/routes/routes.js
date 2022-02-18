@@ -20,37 +20,37 @@ import Game from "@/pages/Game.vue";
 const routes = [
   {
     path: "/",
-    name: "Home",
+    name: "Campionatele mele",
     component: Homepage,
   },
   {
     path:"/stadioane",
-    name:"Stadiums",
+    name:"Stadioane",
     component:Stadiums
   },
   {
     path:"/statistici/:type",
-    name:"Statistics",
+    name:"Statistici",
     component:Statistics
   },
   {
     path:"/campionate/:stadium_id?",
-    name:"Games",
+    name:"Campionate",
     component:Games
   },
   {
     path:"/creeaza-campionat",
-    name:"GameAdd",
+    name:"Adauga campionat",
     component:GameAdd
   },
   {
     path:"/editeaza-campionat/:id",
-    name:"GameEdit",
+    name:"Editeaza campionat",
     component:GameEdit
   },
   {
     path:"/campionat/:id",
-    name:"Game",
+    name:"",
     component:Game
   },
 

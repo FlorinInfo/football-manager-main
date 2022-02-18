@@ -46,7 +46,7 @@
         <md-button class="md-primary"  v-else @click="$emit('registerToGame',game._id)"> 
           <div>
             <span v-if="game.players==game.max_players">In proces</span>
-            <span v-else-if="$route.name=='Home'||game.reg" >Inscris</span>
+            <span v-else-if="$route.name=='Campionatele mele'||game.reg" >Inscris</span>
             <span v-if="game.reg==false&&game.players!=game.max_players" >Inscrie-te</span>
           </div>
           <!-- <span v-else @click="goLink">Vezi campionat</span> -->
