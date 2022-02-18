@@ -36,6 +36,9 @@
                                     color="success"
                                     required
                                 ></v-text-field>
+                                <span class="md-error" v-if="$store.state.errors_auth.email">
+                                  {{$store.state.errors_auth.email}}
+                                </span> 
                                 <v-text-field
                                 color="success"
                                     v-model="login.password"
@@ -43,6 +46,7 @@
                                     label="Password"
                                     required
                                 ></v-text-field>
+                                <span class="md-error" v-if="$store.state.errors_auth.password">{{$store.state.errors_auth.password}}</span> 
                                 </v-col>
                                 <v-col class="d-flex justify-space-between">
                                 <v-btn
@@ -61,7 +65,10 @@
                     </v-tab-item>
                     
                     <v-tab-item :value="'tab-newUser'" >
-                        <v-form>
+                        <div style="height:360px;">
+                          <h4 style="text-align:center;display:block;margin-top:50px;">Coming soon</h4>
+                        </div>
+                        <v-form v-if="true==false">
                         <v-container>
                             <v-row class="flex-column">
 
@@ -457,5 +464,12 @@ body {
     background-image: url('../assets/images/background-homepage2.jpg');
     background-size: cover;
     background-color: #fff!important;
+}
+
+.md-error {
+  color: red;
+  display: block;
+  margin-top: -18px;
+  font-size: 13px;
 }
 </style>
