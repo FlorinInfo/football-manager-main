@@ -14,13 +14,15 @@
                     </ul>
                 </div>
                 <div class="match-card__score">
+                    <span class="match-card__score-special" v-if="match_type==1">Finala mare</span>
+                    <span class="match-card__score-special" v-if="match_type==2">Finala mica</span>
                     <span v-if="status=='waiting'">vs</span>
                     <span v-else>{{team1.stats.gm}} - {{team2.stats.gm}}</span>
                 </div> 
                 <div class="match-card__team match-card__team--2">
                     <span class="match-card__team-name match-card__team--2-name">{{team2.name}}</span>
                     <ul v-if="extend">
-                        <li style="display:flex;" v-for="(p, index) in players2" :key="index">
+                        <li style="display:flex;margin-left:auto;" v-for="(p, index) in players2" :key="index">
             <span style="display:block;margin:auto 0;">{{p.player_id.first_name}} {{p.player_id.second_name}}</span>     
             <md-button @click="openGoalDialog(p.player_id._id)" style="margin-left:10px;" class="md-icon-button md-dense md-raised md-primary">
                 <md-icon>add</md-icon>
@@ -85,6 +87,10 @@ export default {
         extented:{
             type:Boolean,
             default:false
+        },
+        match_type:{
+            type:String,
+            default:""
         }
     },
     data() {
@@ -214,6 +220,7 @@ export default {
         ul {
             margin-top: 20px;
             list-style: none;
+            display: flex; 
 
             li {
                 padding: 1rem 0;
@@ -227,6 +234,16 @@ export default {
         width: calc(33.33% - 5px)!important;  
         display: block;
         text-align: center;
+
+        &-special {
+            padding-bottom: 10px;
+            color: red;
+            font-weight: 400;
+        }
+
+        span {
+            display: block;
+        }
     }
 }
 </style>    

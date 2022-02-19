@@ -1,6 +1,5 @@
 <template>
-    <div class="app-game" v-if="live">
-        
+    <div class="app-game" >
     <div class="app-game__sections">
         <span 
             :class="{'app-game__sections--active':activeSection==0}" 
@@ -27,56 +26,70 @@
             Jucatori
         </span>
     </div>
-    <div class="app-game__section app-game__section--1" v-if="activeSection==0&&live.top.game.live">
+    <div class="app-game__section app-game__section--1" v-if="activeSection==0">
         <!-- {{live.top.game.live._id}}
         {{live.top.game.live.status}} -->
-
+        <div v-if="loader" class="loader-element">
+            <md-progress-spinner class="md-success" md-mode="indeterminate" ></md-progress-spinner>
+        </div>
         <AppMatchCard
+            v-if="liveMatch"
             @addGoal="addGoal"
             @finishMatch="finishMatch"
             @deleteGoal="deleteGoal"
-            :match_id="live.top.game.live._id"  
-            :team1="live.top.game.live.team1" 
-            :team2="live.top.game.live.team2"
-            :status="live.top.game.live.status"
+            :match_id="liveMatch._id"  
+            :team1="liveMatch.team1" 
+            :team2="liveMatch.team2"
+            :status="liveMatch.status"
             :extented="true"
+            :match_type="liveMatch.match_type"
         />
+        <span v-if="loader==false&&!liveMatch" > Nu sunt meciuri live momentan {{loader}} {{liveMatch}}</span>
     </div>
-    
     <div class="app-game__section app-game__section--1" v-if="activeSection==1">
-        <AppMatchCard
-            @addGoal="addGoal"
-            @deleteGoal="deleteGoal"
-            v-for="m in live.matches.filter(match=>match.status!='played')" 
-            :key="m._id"
-            :match_id="m._id"  
-            :team1="m.team1" 
-            :team2="m.team2"
-            :status="m.status"
-        />
-        <AppMatchCard
-            @addGoal="addGoal"
-            @deleteGoal="deleteGoal"
-            v-for="m in live.matches.filter(match=>match.status=='played')" 
-            :key="m._id"
-            :match_id="m._id" 
-            :team1="m.team1" 
-            :team2="m.team2"
-            :status="m.status"
-        />
-    </div>
-    <div class="app-game__section app-game__section--2" v-if="activeSection==2">
-        <div v-if="live.teams.length==0" style="text-align:center;">
-            <h5>Nu au fost create echipe momentan</h5>
+        <!-- {{live.top.game.live._id}}
+        {{live.top.game.live.status}} -->
+        <div v-if="loader" class="loader-element">
+            <md-progress-spinner class="md-success" md-mode="indeterminate" ></md-progress-spinner>
         </div>
-        <md-card v-else>
+        <div v-if="matches&&matches.length>0">
+            <AppMatchCard
+                @addGoal="addGoal"
+                @deleteGoal="deleteGoal"
+                v-for="m in matches.filter(match=>match.status!='played')" 
+                :key="m._id"
+                :match_id="m._id"  
+                :team1="m.team1" 
+                :team2="m.team2"
+                :status="m.status"
+                :match_type="m.match_type"
+            />
+            <AppMatchCard
+                @addGoal="addGoal"
+                @deleteGoal="deleteGoal"
+                v-for="m in matches.reverse().filter(match=>match.status=='played')" 
+                :key="m._id"
+                :match_id="m._id" 
+                :team1="m.team1" 
+                :team2="m.team2"
+                :status="m.status"
+                :match_type="m.match_type"
+            />
+        </div>
+        <span v-if="(loader==false&&!matches)||(loader==false&&matches.length==0)" > Nu sunt meciuri momentan</span>
+    </div>
+    <div class="app-game__section app-game__section--1" v-if="activeSection==2">
+        <!-- {{live.top.game.live._id}}
+        {{live.top.game.live.status}} -->
+        <div v-if="loader" class="loader-element">
+            <md-progress-spinner class="md-success" md-mode="indeterminate" ></md-progress-spinner>
+        </div>
+        <md-card v-if="teams&&teams.length>0">
           <md-card-header data-background-color="green">
             <h4 class="title">Clasament echipe</h4> 
-            <!-- <p class="category">Here is a subtitle for this table</p> -->
           </md-card-header>
           <md-card-content>
-        <!-- {{live.players}} -->
-                <md-table v-model="live.teams" table-header-color="green">
+                <md-table v-model="teams" table-header-color="green">
                     <md-table-row slot="md-table-row" slot-scope="{ item }">
                         <md-table-cell md-label="Nume Echipa">
                             {{ item.name }} 
@@ -109,16 +122,21 @@
                 </md-table>
             </md-card-content>
         </md-card>
+        <span v-if="(loader==false&&!teams)||(loader==false&&teams.length==0)" > Nu sunt echipe momentan</span>
     </div>
-    <div class="app-game__section app-game__section--3" v-if="activeSection==3">
-        <md-card >
+    <div class="app-game__section app-game__section--1" v-if="activeSection==3">
+        <!-- {{live.top.game.live._id}}
+        {{live.top.game.live.status}} -->
+        <div v-if="loader" class="loader-element">
+            <md-progress-spinner class="md-success" md-mode="indeterminate" ></md-progress-spinner>
+        </div>
+        <md-card v-if="players&&players.length>0"> 
+            <span style="display:none;">{{players}}</span> 
           <md-card-header data-background-color="green">
             <h4 class="title">Statistica jucatori</h4>
-            <!-- <p class="category">Here is a subtitle for this table</p> -->
           </md-card-header>
           <md-card-content>
-        <!-- {{live.players}} -->
-                <md-table v-model="live.players" table-header-color="green">
+                <md-table v-model="players" table-header-color="green">
                     <md-table-row slot="md-table-row" slot-scope="{ item }">
                         <md-table-cell md-label="Nume Prenume">
                             {{ item.player_id.first_name }} {{item.player_id.second_name}}
@@ -130,6 +148,7 @@
                 </md-table>
             </md-card-content>
         </md-card>
+        <span v-if="loader==false&&!players"> Nu sunt jucatori momentan</span>
     </div>
     </div>
 </template>
@@ -147,96 +166,54 @@ export default {
     data(){
         return {
             game:null,
+            liveMatch:null,
+            players:null,
+            teams:null,
             live:null,
             game_status:0,
             loading:true,
             activeSection:0, 
+            matches:null,
+            loader:true
         }
     },
     methods:{
         changeSection(id) {
             this.activeSection = id;
-        },
-        registerToGame(id) {
-            let data = {
-                user_id:this.$store.state.user_id,
-                token:this.$store.state.token,
-                game_id:id
-            }
-            console.log(id)
-            this.loading = this.$vs.loading()
-            this.axios.post('/register-to-game',data).then((response) => {
-            // this.loading.close()
-                if(response.data.status){
-                // this.$vs.notification({
-                //     progress: 'auto',
-                //     color:"success",
-                //     position:"top-right",
-                //     title: 'Super, super! 😎',
-                //     text: 'Te-ai inscris cu succes la campionat.Bafta bossulica! '
-                // })
-                // alert(1)
-                localStorage.setItem("game_id",id);  
-                this.loadPage();
-            }
-            else {
-                // this.$vs.notification({
-                //     progress: 'auto',
-                //     color:"danger",
-                //     position:"top-right",
-                //     title: 'Sorry, sorry! 🤨',
-                //     text: 'Te-ai inscris deja la acest campionat bossulica... '
-                // })
-            }
-            })
+            this.loadPage();
         },
         addGoal(data){
-            // alert("x2",team_2)    
         let dataFull = {
             user_id:this.$store.state.user_id,
             token:this.$store.state.token,
-            stadium_id:this.live.top.stadium.id,
+            stadium_id:this.liveMatch.stadium_id,
             player_id:data.player_id,
             team_1:data.team1,
             team_2:data.team2,
-            game_id:this.live.top.game.id,
+            game_id:this.liveMatch.game_id,
             match:data.match_id,
             goal_type:data.goal_type
         }
         console.log(dataFull)
         this.axios.post('/add-goal',dataFull).then((response) => { 
             response = response.data;
-            this.$store.commit("SET_AUTH",response.logged); 
+            // this.$store.commit("SET_AUTH",response.logged); 
             if(response.status) {
-                // let text = 'Golul';
-                // if(goal_type==2) text = 'Autogolul';
-                // this.goal_modal = false;
-                // this.goal_stats = null;  
                 console.log(response)  
                 this.loadPage();
             }
         })
-        // console.log(data);  
-    //               stadium_id: {{live.top.stadium.id}}
-    //   <br> 
-    // player_id: {{goal_stats.player_id._id}}   
-    //   <br> 
-    //   team_1:{{live.top.game.live.team1._id}}
-    //   <br>
-    // team_2:{{live.top.game.live.team2._id}}
-    //   <br>  
-    //   game_id: {{live.top.game.id}}
         },
         deleteGoal(goal_type, player_id){
             let data = {
                 user_id:this.$store.state.user_id,
                 token:this.$store.state.token,
-                stadium_id:this.live.top.stadium.id,
+                stadium_id:this.liveMatch.stadium_id,
                 player_id,
-                team_1:this.live.top.game.live.team1._id,
-                team_2:this.live.top.game.live.team2._id,
-                game_id:this.live.top.game.id,
-                match:this.live.top.game.live._id,
+                team_1:this.liveMatch.team1._id,
+                team_2:this.liveMatch.team2._id,
+                game_id:this.liveMatch.game_id,
+                match:this.liveMatch._id,
                 goal_type
             }
             console.log(data)
@@ -246,6 +223,7 @@ export default {
                 // this.$store.commit("SET_AUTH",response.logged); 
                 this.$store.commit("SET_AUTH",response.logged); 
                 if(response.status) {
+                    console.log(response)
                     // let text = 'Golul';
                     // if(goal_type==2) text = 'Autogolul';
                     // this.goal_modal = false;
@@ -258,14 +236,15 @@ export default {
         finishMatch(){
             let data = {
                 team1:{
-                    id:this.live.top.game.live.team1._id,
-                    gm:this.live.top.game.live.team1.stats.gm
+                    id:this.liveMatch.team1._id,
+                    gm:this.liveMatch.team1.stats.gm
                 },
                 team2:{
-                    id:this.live.top.game.live.team2._id,
-                    gm:this.live.top.game.live.team2.stats.gm
+                    id:this.liveMatch.team2._id,
+                    gm:this.liveMatch.team2.stats.gm
                 },
-                match_id:this.live.top.game.live._id,
+                match_id:this.liveMatch._id,
+                match_type:this.liveMatch.match_type
             }
             console.log(data);
             this.axios.post('/finish-match',data).then((response) => { 
@@ -288,15 +267,27 @@ export default {
         //     })
         // },
         loadPage() {
+            this.loader = true;
             // this.loading = this.$vs.loading()
             const credentials = {
                 user_id:this.$store.state.user_id,
                 token:this.$store.state.token,
-                game_id:this.$route.params.id
+                game_id:this.$route.params.id,
+                section:this.activeSection 
             }
             this.axios.get('/get-live', { params:credentials }).then((response) => {
                 response = response.data;
-                this.live = response.data;
+                // this.live = response.data;
+                if(this.activeSection == 0)
+                    this.liveMatch = response.liveMatch;
+                if(this.activeSection == 1)
+                    this.matches = response.matches; 
+                if(this.activeSection == 2)
+                    this.teams = response.teams;
+                if(this.activeSection == 3)
+                    this.players = response.players;
+                this.loader = false;
+                // console.log(this.liveMatch)
                 // this.game_status = response.data.game_status;
                 this.$store.commit("SET_AUTH",response.logged); 
                 // this.loading.close()
@@ -335,4 +326,9 @@ export default {
     }
 }
 
+.loader-element {
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+}
 </style>
