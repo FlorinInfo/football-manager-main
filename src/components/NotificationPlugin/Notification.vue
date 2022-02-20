@@ -1,5 +1,6 @@
 <template>
   <div
+    style="margin-top:0px;"
     @click="close()"
     data-notify="container"
     class="alert open alert-with-icon"

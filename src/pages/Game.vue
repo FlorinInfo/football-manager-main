@@ -25,6 +25,12 @@
         >
             Jucatori
         </span>
+        <span 
+            v-if="org_id==$store.state.user_id"
+            @click="goLink()"
+        >
+            Editeaza
+        </span>
     </div>
     <div class="app-game__section app-game__section--1" v-if="activeSection==0">
         <!-- {{live.top.game.live._id}}
@@ -44,7 +50,7 @@
             :extented="true"
             :match_type="liveMatch.match_type"
         />
-        <span v-if="loader==false&&!liveMatch" > Nu sunt meciuri live momentan {{loader}} {{liveMatch}}</span>
+        <span class="no-elements" v-if="loader==false&&!liveMatch" > Nu sunt meciuri live momentan</span>
     </div>
     <div class="app-game__section app-game__section--1" v-if="activeSection==1">
         <!-- {{live.top.game.live._id}}
@@ -53,6 +59,9 @@
             <md-progress-spinner class="md-success" md-mode="indeterminate" ></md-progress-spinner>
         </div>
         <div v-if="matches&&matches.length>0">
+            <!-- <div v-for="m in matches.filter(match=>match.status!='played')" :key="m._id">{{m}}</div>
+            <br>
+            <div v-for="m in matches.filter(match=>match.status=='played')" :key="m._id">{{m}}</div> -->
             <AppMatchCard
                 @addGoal="addGoal"
                 @deleteGoal="deleteGoal"
@@ -67,7 +76,7 @@
             <AppMatchCard
                 @addGoal="addGoal"
                 @deleteGoal="deleteGoal"
-                v-for="m in matches.reverse().filter(match=>match.status=='played')" 
+                v-for="m in matches.filter(match=>match.status=='played')" 
                 :key="m._id"
                 :match_id="m._id" 
                 :team1="m.team1" 
@@ -76,7 +85,7 @@
                 :match_type="m.match_type"
             />
         </div>
-        <span v-if="(loader==false&&!matches)||(loader==false&&matches.length==0)" > Nu sunt meciuri momentan</span>
+        <span class="no-elements" v-if="(loader==false&&!matches)||(loader==false&&matches.length==0)" > Nu sunt meciuri momentan</span>
     </div>
     <div class="app-game__section app-game__section--1" v-if="activeSection==2">
         <!-- {{live.top.game.live._id}}
@@ -122,7 +131,7 @@
                 </md-table>
             </md-card-content>
         </md-card>
-        <span v-if="(loader==false&&!teams)||(loader==false&&teams.length==0)" > Nu sunt echipe momentan</span>
+        <span class="no-elements" v-if="(loader==false&&!teams)||(loader==false&&teams.length==0)" > Nu sunt echipe momentan</span>
     </div>
     <div class="app-game__section app-game__section--1" v-if="activeSection==3">
         <!-- {{live.top.game.live._id}}
@@ -148,7 +157,7 @@
                 </md-table>
             </md-card-content>
         </md-card>
-        <span v-if="loader==false&&!players"> Nu sunt jucatori momentan</span>
+        <span class="no-elements" v-if="loader==false&&!players"> Nu sunt jucatori momentan</span>
     </div>
     </div>
 </template>
@@ -174,7 +183,8 @@ export default {
             loading:true,
             activeSection:0, 
             matches:null,
-            loader:true
+            loader:true,
+            org_id:null
         }
     },
     methods:{
@@ -194,12 +204,12 @@ export default {
             match:data.match_id,
             goal_type:data.goal_type
         }
-        console.log(dataFull)
+        // console.log(dataFull)
         this.axios.post('/add-goal',dataFull).then((response) => { 
             response = response.data;
             // this.$store.commit("SET_AUTH",response.logged); 
             if(response.status) {
-                console.log(response)  
+                // console.log(response)  
                 this.loadPage();
             }
         })
@@ -216,14 +226,14 @@ export default {
                 match:this.liveMatch._id,
                 goal_type
             }
-            console.log(data)
+            // console.log(data)
             this.axios.delete('/delete-goal',{data:data}).then((response) => { 
-                console.log(response);
+                // console.log(response);
                 response = response.data;
                 // this.$store.commit("SET_AUTH",response.logged); 
                 this.$store.commit("SET_AUTH",response.logged); 
                 if(response.status) {
-                    console.log(response)
+                    // console.log(response)
                     // let text = 'Golul';
                     // if(goal_type==2) text = 'Autogolul';
                     // this.goal_modal = false;
@@ -231,7 +241,7 @@ export default {
                     this.loadPage();
                 }
             })
-            console.log(data);  
+            // console.log(data);  
         },
         finishMatch(){
             let data = {
@@ -246,13 +256,16 @@ export default {
                 match_id:this.liveMatch._id,
                 match_type:this.liveMatch.match_type
             }
-            console.log(data);
+            // console.log(data);
             this.axios.post('/finish-match',data).then((response) => { 
                 response = response.data;
                 this.loadPage();
                 // this.$store.commit("SET_AUTH",response.logged); 
-                console.log(response)
+                // console.log(response)
             })
+        },
+        goLink() {
+            this.$router.push("/editeaza-campionat/"+this.$route.params.id);
         },
         // endGame() {
         //     const credentials = {
@@ -277,11 +290,19 @@ export default {
             }
             this.axios.get('/get-live', { params:credentials }).then((response) => {
                 response = response.data;
+                this.$store.commit("SET_AUTH",response.logged); 
                 // this.live = response.data;
+                this.org_id = response.org_id;
                 if(this.activeSection == 0)
                     this.liveMatch = response.liveMatch;
-                if(this.activeSection == 1)
+                if(this.activeSection == 1){
                     this.matches = response.matches; 
+                    if(this.matches)
+                        for(let index = 0; index < this.matches.length;index++) {
+                            this.matches[index].team1.stats.gm = this.matches[index].gm_team1;
+                            this.matches[index].team2.stats.gm = this.matches[index].gm_team2;
+                        }
+                }
                 if(this.activeSection == 2)
                     this.teams = response.teams;
                 if(this.activeSection == 3)
@@ -289,7 +310,6 @@ export default {
                 this.loader = false;
                 // console.log(this.liveMatch)
                 // this.game_status = response.data.game_status;
-                this.$store.commit("SET_AUTH",response.logged); 
                 // this.loading.close()
                 console.log("xxx",response)   
             })
@@ -305,7 +325,7 @@ export default {
 .app-game {
 
     &__sections {
-        max-width: 450px;
+        max-width: 650px;
         margin: 0 auto;
         display: flex;
         justify-content: space-between;
@@ -330,5 +350,12 @@ export default {
     margin: 0 auto;
     display: flex;
     justify-content: center;
+}
+
+.no-elements {
+    display: block;
+    text-align: center;
+    font-size: 19px!important;
+    padding-bottom: 20px!important;
 }
 </style>

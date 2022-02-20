@@ -139,7 +139,7 @@
         </v-container>
     </v-app>
     <div v-else class="app-homepage-logged"> 
-            <div class="app-games__template" v-for="game in myGames.reverse()" :key="game.game_id._id">
+            <div class="app-games__template" v-for="game in myGames" :key="game.game_id._id">
                 <AppGame :game="game.game_id"/>       
             </div>
         </div>
@@ -194,7 +194,7 @@
             this.axios.get('/get-my-games', { params:credentials }).then((response) => {
                     response = response.data;
                     this.$store.commit("SET_AUTH",response.logged); 
-                    console.log(response)
+                    // console.log(response)
                     if(response.logged==true){
                         this.myGames = [...response.games]
                         if(this.myGames.length == 0) {
@@ -202,7 +202,7 @@
                         }
                     }
                     // loading.close()
-                    console.log("xxx",response)   
+                    // console.log("xxx",response)   
             })
           }
     },

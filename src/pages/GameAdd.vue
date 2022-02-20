@@ -126,10 +126,26 @@ export default {
                     // localStorage.setItem("game_id", this.game_id);
                     // this.$store.dispatch('getAddGame', localStorage.getItem("game_id"));
                     this.create = false;
+                    this.$notify(
+                        {
+                            message: 'Campionatul a fost creat cu succes.',
+                            icon: 'add_alert',
+                            horizontalAlign: "right",
+                            verticalAlign: "top",
+                            type: "success"
+                        })
                 }
                 else {
                     this.errors = response.errors;
                     console.log(this.errors)
+                    this.$notify(
+                        {
+                            message: 'Campionatul nu a fost creat.Eroare!',
+                            icon: 'add_alert',
+                            horizontalAlign: "right",
+                            verticalAlign: "top",
+                            type: "danger"
+                        })
                 }
             }).catch(error=>{
                 console.log(error);

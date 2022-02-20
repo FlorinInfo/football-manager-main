@@ -2,7 +2,7 @@
     <div class="game-edit" v-if="game">
         <md-card >
                 <md-card-header data-background-color="green">
-                    <h4 class="title">Adauga campionat</h4>
+                    <h4 class="title" @click="goLink" style="cursor:pointer;">{{game.name}}</h4>
                     <!-- <p class="category">Here is a subtitle for this table</p> -->
                 </md-card-header>
                 <md-card-content>
@@ -33,10 +33,12 @@
                 </div>
                 <div class="md-layout-item md-small-size-100 md-size-100">
                     <md-field>
-                    <label>Stadion</label>
-                    <md-select v-model="game.stadium_id" name="movie" id="movie" disabled>
-                        <md-option v-for="s in $store.state.add_game.stadiums"  :key="s._id" :value="s._id">{{s.name}}</md-option>
-                    </md-select>  
+                    <label>Stadion</label> 
+                    <md-input v-model="game.stadium_id.name"  disabled></md-input>
+
+                    <!-- <md-select  name="movie" id="movie" disabled>
+                        <md-option v-for="s in $store.state.add_game.stadiums"  :key="s._id" :value="s._id">{{game.stadium_id.name}}</md-option>
+                    </md-select>   -->
                     <md-icon>stadium</md-icon> 
                     </md-field>
                     <!-- <span class="input-error" v-if="errors&&errors.stadium_id">{{errors.stadium_id}}</span> -->
@@ -179,7 +181,7 @@ export default {
             };
             this.axios.post("/add-team", data).then((response)=>{
                 response = response.data;
-                console.log(response)
+                // console.log(response)
                 this.$store.commit("SET_AUTH", response.logged);
                 if(response.status==true) {
                     this.team_name = "";
@@ -193,23 +195,36 @@ export default {
                     // })
                     this.$store.commit("SET_D_TEAM", false);
                     this.$emit("loadTeams");
+                    this.loadPage();
+                    this.$notify(
+                        {
+                            message: 'Ai adaugat echipa cu succes',
+                            icon: 'add_alert',
+                            horizontalAlign: "right",
+                            verticalAlign: "top",
+                            type: "success"
+                        })
                 }
                 else {
-                    // this.$vs.notification({
-                    //     progress: 'auto',
-                    //     color:"danger",
-                    //     position:"top-right",
-                    //     title: 'Super, super! 😎',
-                    //     text: `Echipa ${name} nu poate fi adaugata.`
-                    // })
+                    this.$notify(
+                        {
+                            message: 'Echipa nu a fost adaugata.Eroare!',
+                            icon: 'add_alert',
+                            horizontalAlign: "right",
+                            verticalAlign: "top",
+                            type: "danger"
+                        })
                 }
 
             }).catch(error=>{
-                console.log(error);
+                // console.log(error);
             })
         },
+        goLink() {
+            this.$router.push("/campionat/"+this.$route.params.id);
+        },
         addTeamPlayer(id, team) {
-            console.log(team)
+            // console.log(team)
             let data = {
                 game_id:this.game._id,
                 team_id:team,
@@ -217,18 +232,18 @@ export default {
                 token:this.$store.state.token,
                 user_id:this.$store.state.user_id
             }
-            console.log(data);
+            // console.log(data);
             this.axios.post("/add-team-player", data).then((response)=>{
                 response = response.data;
-                console.log(response)
+                // console.log(response)
                 this.$store.commit("SET_AUTH", response.logged);
                 if(response.status==true) {
-                    console.log(response)
+                    // console.log(response)
                     // this.$store.commit("SET_ADD_TEAMS", response.teams);
                     // this.team = ""
                 }
             }).catch(error=>{
-                console.log(error);
+                // console.log(error);
             })
         },
         addMatches() {
@@ -237,15 +252,33 @@ export default {
                 stadium_id :this.game.stadium_id._id,
                 game_id : this.game._id
             }
-            console.log(data);
+            // console.log(data);
             this.axios.post('/add-match',data).then((response) => {
                 this.loadMatches = this.matchDialog = false;
                 // this.live.matches.push(data.matches); 
                 if(response.data.succes) {
                     this.templateAdd[0].team1 = "";
                     this.templateAdd[0].team2 = "";
+                    this.$notify( 
+                        {
+                            message: 'Meciul a fost adaugat cu succes',
+                            icon: 'add_alert',
+                            horizontalAlign: "right",
+                            verticalAlign: "top",
+                            type: "success"
+                        })
                 }
-                console.log(response)
+                else {
+                    this.$notify(
+                        {
+                            message: 'Meciul nu a fost adaugat.Eroare!',
+                            icon: 'add_alert',
+                            horizontalAlign: "right",
+                            verticalAlign: "top",
+                            type: "danger"
+                        })
+                }
+                // console.log(response)
             })
         },
         loadPage() {
@@ -257,7 +290,7 @@ export default {
             this.axios.get('/get-game', { params:credentials }).then((response) => {
                 response = response.data;
                 if(response.game.org_id!=this.$store.state.user_id) window.location = "/";
-                console.log(response)   
+                // console.log(response)   
                 this.game = {...response.game};
                 this.$store.commit("SET_ADD_TEAMS", response.game.teams);
                 

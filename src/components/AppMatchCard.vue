@@ -4,9 +4,9 @@
             <div class="match-card">
                 <div class="match-card__team">
                     <span class="match-card__team-name">{{team1.name}}</span>
-                    <ul v-if="extend">
+                    <ul v-if="extend" style="flex-direction:column;">
                         <li style="display:flex;" v-for="(p, index) in players1" :key="index">
-            <span style="display:block;margin:auto 0;">{{p.player_id.first_name}} {{p.player_id.second_name}}</span>     
+            <span style="display:block;margin:auto 0;width:120px;">{{p.player_id.first_name}} {{p.player_id.second_name}}</span>     
             <md-button @click="openGoalDialog(p.player_id._id)" style="margin-left:10px;" class="md-icon-button md-dense md-raised md-primary">
                 <md-icon>add</md-icon>
             </md-button>
@@ -21,12 +21,12 @@
                 </div> 
                 <div class="match-card__team match-card__team--2">
                     <span class="match-card__team-name match-card__team--2-name">{{team2.name}}</span>
-                    <ul v-if="extend">
-                        <li style="display:flex;margin-left:auto;" v-for="(p, index) in players2" :key="index">
-            <span style="display:block;margin:auto 0;">{{p.player_id.first_name}} {{p.player_id.second_name}}</span>     
-            <md-button @click="openGoalDialog(p.player_id._id)" style="margin-left:10px;" class="md-icon-button md-dense md-raised md-primary">
+                    <ul v-if="extend" style="flex-direction:column;">
+                        <li style="display:flex;margin-left:auto;width:120px;" v-for="(p, index) in players2" :key="index">
+            <md-button @click="openGoalDialog(p.player_id._id)" style="margin-right:30px;" class="md-icon-button md-dense md-raised md-primary">
                 <md-icon>add</md-icon>
             </md-button>
+            <span style="display:block;margin:auto 0;">{{p.player_id.first_name}} {{p.player_id.second_name}}</span>     
                         </li>
                     </ul> 
                 </div>
@@ -114,13 +114,13 @@ export default {
                     id_team1:this.team1._id,
                     id_team2:this.team2._id,
                 }
-                console.log(credentials);
+                // console.log(credentials);
                 this.axios.get('/get-match-players', { params:credentials }).then((response) => {
                     response = response.data;
                     this.extend = !this.extend;
                     this.players1 = response.team1.players;
                     this.players2 = response.team2.players; 
-                    console.log(response);
+                    // console.log(response);
                 })
             }
             else {
@@ -144,7 +144,7 @@ export default {
             this.showDialogGoal = false;
         },
         openGoalDialog(id) {
-            console.log(id)
+            // console.log(id)
             this.showDialogGoal = true;
             this.player_id = id;
         },

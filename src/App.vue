@@ -6,7 +6,7 @@
   <DashboardLayout v-else>
     <router-view></router-view>
   </DashboardLayout>
-  
+  <notifications></notifications>
 </div>
 </template>
 
