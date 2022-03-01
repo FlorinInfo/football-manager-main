@@ -243,7 +243,7 @@ export default {
             })
             // console.log(data);  
         },
-        finishMatch(){
+        finishMatch(finished_type, penalty_1, penalty_2){
             let data = {
                 team1:{
                     id:this.liveMatch.team1._id,
@@ -254,7 +254,10 @@ export default {
                     gm:this.liveMatch.team2.stats.gm
                 },
                 match_id:this.liveMatch._id,
-                match_type:this.liveMatch.match_type
+                match_type:this.liveMatch.match_type,
+                finished_type,
+                penalty_1,
+                penalty_2
             }
             // console.log(data);
             this.axios.post('/finish-match',data).then((response) => { 

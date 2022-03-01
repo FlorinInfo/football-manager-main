@@ -33,6 +33,7 @@
             </div>
             <div class="md-layout-item md-size-100 text-right" v-if="extented">
                 <md-button class="md-raised md-danger" @click="active=true">Finalizare meci</md-button>
+                <md-button class="md-raised md-danger" @click="activePenalty=true">Finalizare la penalti</md-button>
             </div> 
             <md-dialog-confirm
                 style="z-index:100000;" 
@@ -41,7 +42,7 @@
                 md-confirm-text="Confirma"
                 md-cancel-text="Renunta"
                 @md-cancel="onCancel"
-                @md-confirm="onConfirm" />
+                @md-confirm="onConfirm(1)" />
                 <md-dialog :md-active.sync="showDialogGoal" style="z-index:10000;" >
                     <div style="width:400px;"></div>
                     <div class="md-layout" style="padding:20px 0; ">
@@ -59,6 +60,30 @@
                         </div> 
                     </div>
                 </md-dialog>
+                <md-dialog :md-active.sync="activePenalty" style="z-index:10000;" >
+                    <div style="width:400px;"></div>
+                    <div class="md-layout" style="padding:20px 0; ">
+                        <div class="md-layout-item md-size-50 text-center">
+                            <md-field>
+                                <label>{{team1.name}}</label>
+                                <md-input v-model="penalty_1" type="number"></md-input>
+                                <!-- <md-icon>sports_soccer</md-icon>  -->
+                            </md-field>
+                        </div>
+                        <div class="md-layout-item md-size-50 text-center">
+                            <md-field>
+                                <label>{{team2.name}}</label>
+                                <md-input v-model="penalty_2" type="number"></md-input>
+                                <!-- <md-icon>sports_soccer</md-icon>  -->
+                            </md-field>
+                        </div> 
+                           <div style="display:flex;justify-content:right;margin-left:auto;margin-right:20px;">
+                                <md-button class="md-raised md-danger" @click="activePenalty=false">Renunta</md-button>
+                            <md-button class="md-raised md-danger" @click="onConfirm(2)">Finalizare meci</md-button>
+                           </div>
+                    </div>
+                </md-dialog>
+    
         </md-card>
         <!-- <div class="app-match__extend" @click="extendCard" v-if="!extented">
             <md-icon style="color:white;" v-if="!extend">arrow_circle_down</md-icon>
@@ -101,7 +126,10 @@ export default {
             active: false,
             value:false,
             showDialogGoal:false,
-            player_id:null
+            player_id:null,
+            activePenalty:false,
+            penalty_1:"",
+            penalty_2:""
         }
     },
     methods:{
@@ -148,9 +176,10 @@ export default {
             this.showDialogGoal = true;
             this.player_id = id;
         },
-        onConfirm () {
+        onConfirm (finished_type) {
         this.value = true;
-        this.$emit("finishMatch");
+        this.$emit("finishMatch", this.finished_type, this.penalty_1, this.penalty_2);
+        this.activePenalty = false;
         },
         onCancel () {
         this.value = false;
