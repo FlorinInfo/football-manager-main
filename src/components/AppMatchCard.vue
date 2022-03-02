@@ -16,6 +16,7 @@
                 <div class="match-card__score">
                     <span class="match-card__score-special" v-if="match_type==1">Finala mare</span>
                     <span class="match-card__score-special" v-if="match_type==2">Finala mica</span>
+                    <!-- <span style="display:block;font-size:15px!important;" >Finala mica</span> -->
                     <span v-if="status=='waiting'">vs</span>
                     <span v-else>{{team1.stats.gm}} - {{team2.stats.gm}}</span>
                     <span style="display:block;font-size:15px;!important;" v-if="finished_type==2">Penalti</span>
@@ -35,7 +36,7 @@
             </div>
             <div class="md-layout-item md-size-100 text-right" v-if="extented">
                 <md-button class="md-raised md-danger" @click="active=true">Finalizare meci</md-button>
-                <md-button class="md-raised md-danger" @click="activePenalty=true">Finalizare la penalti</md-button>
+                <md-button class="md-raised md-danger" @click="activePenalty=true" v-if="team2.stats.gm==team1.stats.gm">Finalizare la penalti</md-button>
             </div> 
             <md-dialog-confirm
                 style="z-index:100000;" 

@@ -34,6 +34,7 @@
     </div>
     <div class="app-game__section app-game__section--1" v-if="activeSection==0">
         <!-- {{live.top.game.live._id}}
+                        
         {{live.top.game.live.status}} -->
         <div v-if="loader" class="loader-element">
             <md-progress-spinner class="md-success" md-mode="indeterminate" ></md-progress-spinner>
@@ -50,7 +51,21 @@
             :extented="true"
             :match_type="liveMatch.match_type"
         />
-        <span class="no-elements" v-if="loader==false&&!liveMatch" > Nu sunt meciuri live momentan</span>
+        <div v-if="finals.length!=0">
+            <AppMatchCard
+                v-for="m in finals" 
+                :key="m._id"
+                :match_id="m._id"  
+                :team1="m.team1" 
+                :team2="m.team2"
+                :status="m.status"
+                :match_type="m.match_type"
+                :finished_type="m.finished_type"
+                :penalty_team_1="m.penalty_1"
+                :penalty_team_2="m.penalty_2"
+            />
+        </div>
+        <span class="no-elements" v-if="loader==false&&!liveMatch&&finals.length==0" > Nu sunt meciuri live momentan</span>
     </div>
     <div class="app-game__section app-game__section--1" v-if="activeSection==1">
         <!-- {{live.top.game.live._id}}
@@ -190,7 +205,9 @@ export default {
             activeSection:0, 
             matches:null,
             loader:true,
-            org_id:null
+            org_id:null,
+            finals:[],
+            champion:null
         }
     },
     methods:{
@@ -302,8 +319,12 @@ export default {
                 this.$store.commit("SET_AUTH",response.logged); 
                 // this.live = response.data;
                 this.org_id = response.org_id;
-                if(this.activeSection == 0)
+                if(this.activeSection == 0){
                     this.liveMatch = response.liveMatch;
+                    this.finals = response.finals;
+                    this.champion = response.champion;
+                    console.log(this.finals) 
+                }
                 if(this.activeSection == 1){
                     this.matches = response.matches; 
                     if(this.matches)
