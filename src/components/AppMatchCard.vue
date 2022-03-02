@@ -18,6 +18,8 @@
                     <span class="match-card__score-special" v-if="match_type==2">Finala mica</span>
                     <span v-if="status=='waiting'">vs</span>
                     <span v-else>{{team1.stats.gm}} - {{team2.stats.gm}}</span>
+                    <span style="display:block;font-size:15px;!important;" v-if="finished_type==2">Penalti</span>
+                    <span style="display:block;font-size:15px!important;" v-if="finished_type==2">{{penalty_team_1}} - {{penalty_team_2}}</span>
                 </div> 
                 <div class="match-card__team match-card__team--2">
                     <span class="match-card__team-name match-card__team--2-name">{{team2.name}}</span>
@@ -116,6 +118,18 @@ export default {
         match_type:{
             type:String,
             default:""
+        },
+        finished_type:{
+            type:Number, 
+            default:1
+        },
+        penalty_team_1:{
+            type:Number,
+            default:0
+        },
+        penalty_team_2:{
+            type:Number,
+            default:0
         }
     },
     data() {
@@ -178,7 +192,7 @@ export default {
         },
         onConfirm (finished_type) {
         this.value = true;
-        this.$emit("finishMatch", this.finished_type, this.penalty_1, this.penalty_2);
+        this.$emit("finishMatch", finished_type, this.penalty_1, this.penalty_2);
         this.activePenalty = false;
         },
         onCancel () {

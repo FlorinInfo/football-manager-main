@@ -72,6 +72,9 @@
                 :team2="m.team2"
                 :status="m.status"
                 :match_type="m.match_type"
+                :finished_type="m.finished_type"
+                :penalty_team_1="m.penalty_1"
+                :penalty_team_2="m.penalty_2"
             />
             <AppMatchCard
                 @addGoal="addGoal"
@@ -83,6 +86,9 @@
                 :team2="m.team2"
                 :status="m.status"
                 :match_type="m.match_type"
+                :finished_type="m.finished_type"
+                :penalty_team_1="m.penalty_1"
+                :penalty_team_2="m.penalty_2"
             />
         </div>
         <span class="no-elements" v-if="(loader==false&&!matches)||(loader==false&&matches.length==0)" > Nu sunt meciuri momentan</span>
