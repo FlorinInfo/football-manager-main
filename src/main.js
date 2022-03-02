@@ -36,7 +36,6 @@ if(process.env.NODE_ENV != "development")
     axios.defaults.baseURL = 'https://football-backend-manager.herokuapp.com/';
 else
     axios.defaults.baseURL = 'http://localhost:6626/';    
-    console.log("🚀 ~ file: main.js ~ line 40 ~ process.env.NODE_ENV", process.env)
 import Vuex from 'vuex'
 Vue.use(Vuex)
 import store from "./store";
